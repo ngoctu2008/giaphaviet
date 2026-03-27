@@ -25,7 +25,7 @@ export default async function FinancePage() {
     .order("date", { ascending: false })
     .order("created_at", { ascending: false });
 
-  if (error) {
+  if (error && error.code !== "PGRST205" && error.code !== "PGRST116") {
     console.error("Error fetching transactions:", error);
   }
 
@@ -79,7 +79,10 @@ export default async function FinancePage() {
       {error?.code === "PGRST205" && (
         <div className="mb-6 bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl">
           <h3 className="font-bold text-amber-900 mb-2">Lưu ý quan trọng: Chưa cập nhật Database (CSDL)</h3>
-          <p className="text-sm mb-3">Hệ thống không tìm thấy bảng <code>transactions</code> trong cơ sở dữ liệu. Để chức năng Sổ công đức hoạt động, bạn cần chạy file script: <code>docs/migrations/03_upgrade_gia_pha_viet.sql</code> trong Supabase SQL Editor.</p>
+          <p className="text-sm">
+            Hệ thống không tìm thấy bảng giao dịch trong cơ sở dữ liệu. Để sử dụng đầy đủ chức năng Sổ công đức, vui lòng vào Supabase SQL Editor và chạy nội dung của file:
+            <code className="mx-1 bg-amber-900/10 px-1.5 py-0.5 rounded font-mono text-xs">docs/migrations/03_upgrade_gia_pha_viet.sql</code>
+          </p>
         </div>
       )}
 
