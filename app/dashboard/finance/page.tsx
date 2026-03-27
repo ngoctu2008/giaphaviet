@@ -76,6 +76,13 @@ export default async function FinancePage() {
         </p>
       </div>
 
+      {error?.code === "PGRST205" && (
+        <div className="mb-6 bg-amber-50 border border-amber-200 text-amber-800 p-4 rounded-xl">
+          <h3 className="font-bold text-amber-900 mb-2">Lưu ý quan trọng: Chưa cập nhật Database (CSDL)</h3>
+          <p className="text-sm mb-3">Hệ thống không tìm thấy bảng <code>transactions</code> trong cơ sở dữ liệu. Để chức năng Sổ công đức hoạt động, bạn cần chạy file script: <code>docs/migrations/03_upgrade_gia_pha_viet.sql</code> trong Supabase SQL Editor.</p>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <div className="bg-white p-5 rounded-2xl shadow-sm border border-stone-200">
           <p className="text-sm font-medium text-stone-500 mb-1">Tổng quỹ hiện tại</p>

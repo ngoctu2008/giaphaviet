@@ -2,7 +2,7 @@
 
 import { SiteSettings } from "@/types";
 import { createClient } from "@/utils/supabase/client";
-import { Loader2, Save } from "lucide-react";
+import { Loader2, Save, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -25,6 +25,24 @@ export default function SettingsForm({
     footer_custom_text: initialSettings?.footer_custom_text || "",
   });
 
+  const [customLinks, setCustomLinks] = useState<Array<{title: string, url: string}>>(
+    Array.isArray(initialSettings?.custom_links) ? initialSettings?.custom_links : []
+  );
+
+  const handleAddLink = () => {
+    setCustomLinks([...customLinks, { title: "", url: "" }]);
+  };
+
+  const handleRemoveLink = (index: number) => {
+    setCustomLinks(customLinks.filter((_, i) => i !== index));
+  };
+
+  const handleLinkChange = (index: number, field: 'title' | 'url', value: string) => {
+    const newLinks = [...customLinks];
+    newLinks[index][field] = value;
+    setCustomLinks(newLinks);
+  };
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
@@ -42,12 +60,26 @@ export default function SettingsForm({
 
     try {
       const supabase = createClient();
-      const { error: updateError } = await supabase
+
+      // Clean empty links
+      const cleanLinks = customLinks.filter(l => l.title.trim() !== "");
+
+      let payload: any = {
+        id: 1,
+        ...formData,
+        custom_links: cleanLinks,
+      };
+
+      let { error: updateError } = await supabase
         .from("site_settings")
-        .upsert({
-          id: 1,
-          ...formData,
-        });
+        .upsert(payload);
+
+      if (updateError && updateError.code === "PGRST204") {
+        // Fallback for older database schemas missing custom_links
+        const { custom_links, ...rest } = payload;
+        const retryRes = await supabase.from("site_settings").upsert(rest);
+        updateError = retryRes.error;
+      }
 
       if (updateError) {
         if (updateError.code === "PGRST205") {
@@ -203,6 +235,61 @@ export default function SettingsForm({
               className="w-full rounded-lg border-stone-200 focus:border-amber-500 focus:ring-amber-500 bg-stone-50 p-2 border"
               placeholder="Con cháu họ Phạm muôn đời ghi nhớ công ơn Tổ tiên..."
             />
+          </div>
+        </div>
+
+        {/* ── Custom Links ──────────────────────────────────── */}
+        <div className="space-y-4 md:col-span-2">
+          <div className="flex items-center justify-between border-b pb-2">
+            <h3 className="text-lg font-medium text-stone-900">
+              Liên kết tùy chỉnh (Footer)
+            </h3>
+            <button
+              type="button"
+              onClick={handleAddLink}
+              className="flex items-center gap-1.5 text-sm font-medium text-amber-700 bg-amber-50 px-3 py-1.5 rounded-lg hover:bg-amber-100 transition-colors"
+            >
+              <Plus className="w-4 h-4" /> Thêm liên kết
+            </button>
+          </div>
+          <p className="text-xs text-stone-500 mb-4">
+            Thêm các liên kết ngoài như: Tộc quy, Tộc ước, Quy định sử dụng quỹ, Trang Facebook...
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {customLinks.map((link, index) => (
+              <div key={index} className="flex gap-2 items-start bg-stone-50 p-3 rounded-xl border border-stone-200">
+                <div className="flex-1 space-y-2">
+                  <input
+                    type="text"
+                    value={link.title}
+                    onChange={(e) => handleLinkChange(index, "title", e.target.value)}
+                    placeholder="VD: Tộc ước dòng họ"
+                    className="w-full rounded-md border-stone-200 focus:border-amber-500 focus:ring-amber-500 p-2 border text-sm"
+                  />
+                  <input
+                    type="url"
+                    value={link.url}
+                    onChange={(e) => handleLinkChange(index, "url", e.target.value)}
+                    placeholder="https://example.com/toc-uoc"
+                    className="w-full rounded-md border-stone-200 focus:border-amber-500 focus:ring-amber-500 p-2 border text-sm"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveLink(index)}
+                  className="p-2 text-stone-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                  title="Xóa liên kết"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+            {customLinks.length === 0 && (
+              <div className="col-span-full py-8 text-center text-stone-400 text-sm border border-dashed border-stone-200 rounded-xl">
+                Chưa có liên kết nào được thêm.
+              </div>
+            )}
           </div>
         </div>
       </div>

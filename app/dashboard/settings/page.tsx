@@ -40,6 +40,7 @@ export default async function SettingsPage() {
   footer_email TEXT,
   footer_phone TEXT,
   footer_custom_text TEXT,
+  custom_links JSONB DEFAULT '[]'::jsonb,
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   CONSTRAINT single_row CHECK (id = 1)
 );
