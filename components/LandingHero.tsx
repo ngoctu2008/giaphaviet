@@ -92,17 +92,17 @@ export default function LandingHero({ siteName }: LandingHeroProps) {
             {
               icon: <Users className="size-6 text-amber-700" />,
               title: "Quản lý Thành viên",
-              desc: "Cập nhật thông tin chi tiết, sổ công đức, tin tức dòng họ và hình ảnh của từng thành viên một cách nhanh chóng.",
+              desc: "Cập nhật thông tin chi tiết, tiểu sử và hình ảnh của từng thành viên trong dòng họ một cách nhanh chóng và bảo mật.",
             },
             {
               icon: <Network className="size-6 text-amber-700" />,
-              title: "Sơ đồ Hiện đại",
-              desc: "Xem trực quan sơ đồ phả hệ, thế hệ và tra cứu danh xưng chính xác với giao diện dễ thao tác.",
+              title: "Sơ đồ Sáng tạo",
+              desc: "Xem trực quan sơ đồ phả hệ, thế hệ và mối quan hệ gia đình với giao diện cây hiện đại, dễ thao tác.",
             },
             {
               icon: <ShieldCheck className="size-6 text-amber-700" />,
               title: "Bảo mật Tối đa",
-              desc: "Dữ liệu riêng tư và cấu hình tùy biến được phân quyền chặt chẽ, bảo vệ an toàn trên hệ thống đám mây.",
+              desc: "Dữ liệu riêng tư như số điện thoại, quê quán được phân quyền chặt chẽ, bảo vệ an toàn trên hệ thống đám mây.",
             },
           ].map((feature, idx) => (
             <motion.div
