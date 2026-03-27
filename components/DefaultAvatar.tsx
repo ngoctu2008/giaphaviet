@@ -6,9 +6,11 @@ export const AVATAR_VERSION = "v2";
 export default function DefaultAvatar({
   gender,
   size = 64,
+  isDeceased = false,
 }: {
   gender?: string;
   size?: number;
+  isDeceased?: boolean;
 }) {
   if (gender === "male") {
     return (
@@ -16,7 +18,7 @@ export default function DefaultAvatar({
         unoptimized
         src={`/avatar/${AVATAR_VERSION}/male.svg`}
         alt="Male"
-        className={`w-full h-full object-cover ${getAvatarBg(gender)}`}
+        className={`w-full h-full object-cover ${getAvatarBg(gender)} ${isDeceased ? "grayscale" : ""}`}
         width={size}
         height={size}
       />
@@ -28,7 +30,7 @@ export default function DefaultAvatar({
       unoptimized
       src={`/avatar/${AVATAR_VERSION}/female.svg`}
       alt="Female"
-      className="w-full h-full object-cover"
+      className={`w-full h-full object-cover ${isDeceased ? "grayscale" : ""}`}
       width={size}
       height={size}
     />
