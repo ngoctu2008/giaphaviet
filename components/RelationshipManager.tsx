@@ -672,7 +672,7 @@ export default function RelationshipManager({
                             unoptimized
                             src={rel.targetPerson.avatar_url}
                             alt={rel.targetPerson.full_name}
-                            className="h-full w-full object-cover"
+                            className={`h-full w-full object-cover ${rel.targetPerson.is_deceased ? "grayscale" : ""}`}
                             width={32}
                             height={32}
                           />
@@ -680,6 +680,7 @@ export default function RelationshipManager({
                           <DefaultAvatar
                             gender={rel.targetPerson.gender}
                             size={32}
+                            isDeceased={rel.targetPerson.is_deceased}
                           />
                         )}
                       </div>

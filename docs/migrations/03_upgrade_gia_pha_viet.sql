@@ -19,11 +19,19 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
   footer_email TEXT,
   footer_phone TEXT,
   footer_custom_text TEXT,
+  custom_links JSONB,
   updated_at TIMESTAMPTZ DEFAULT NOW(),
   CONSTRAINT single_row CHECK (id = 1)
 );
 
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
+
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='site_settings' AND column_name='custom_links') THEN
+        ALTER TABLE "public"."site_settings" ADD COLUMN "custom_links" JSONB;
+    END IF;
+END $$;
 
 -- Hàm hỗ trợ kiểm tra quyền Admin
 CREATE OR REPLACE FUNCTION public.is_admin()

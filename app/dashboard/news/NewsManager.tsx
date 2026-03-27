@@ -3,7 +3,7 @@
 import { News } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 import { Plus, Trash2, Edit2, Image as ImageIcon, Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function NewsManager({
   initialNews,
@@ -14,6 +14,12 @@ export default function NewsManager({
 }) {
   const [news, setNews] = useState(initialNews);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Sync initialNews to news when initialNews changes (e.g., after a fresh page load or revalidation)
+  // This helps prevent news disappearing on F5
+  useEffect(() => {
+    setNews(initialNews);
+  }, [initialNews]);
   const [editingNews, setEditingNews] = useState<News | null>(null);
 
   // Form State

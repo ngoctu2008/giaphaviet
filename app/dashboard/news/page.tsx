@@ -6,6 +6,8 @@ export const metadata = {
   title: "Tin tức dòng họ | Gia phả Việt",
 };
 
+export const revalidate = 0;
+
 export default async function NewsPage() {
   const profile = await getProfile();
 

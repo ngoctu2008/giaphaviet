@@ -105,7 +105,7 @@ function PersonSelector({
                   className={`h-full w-full object-cover ${(selected as any).is_deceased ? "grayscale" : ""}`}
                 />
               ) : (
-                <DefaultAvatar gender={selected.gender} size={40} />
+                <DefaultAvatar gender={selected.gender} size={40} isDeceased={(selected as any).is_deceased} />
               )
             ) : (
               "?"
@@ -186,7 +186,7 @@ function PersonSelector({
                             className={`h-full w-full object-cover ${(p as any).is_deceased ? "grayscale" : ""}`}
                           />
                         ) : (
-                          <DefaultAvatar gender={p.gender} size={32} />
+                          <DefaultAvatar gender={p.gender} size={32} isDeceased={(p as any).is_deceased} />
                         )}
                       </div>
                       <div
