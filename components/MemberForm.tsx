@@ -341,44 +341,19 @@ export default function MemberForm({
 
       // For a new member, we must insert first to get the ID for the avatar filename
       if (!isEditing || !currentPersonId) {
-        let payload = getPersonData(currentAvatarUrl || null);
-        let { data: newPerson, error: createError } = await supabase
+        const { data: newPerson, error: createError } = await supabase
           .from("persons")
-          .insert(payload)
+          .insert(getPersonData(currentAvatarUrl || null))
           .select()
           .single();
-
-        if (createError && createError.code === 'PGRST204') {
-          // Schema cache error, retry without grave_address
-          const { grave_address, ...rest } = payload;
-          const retryRes = await supabase
-            .from("persons")
-            .insert(rest)
-            .select()
-            .single();
-          newPerson = retryRes.data;
-          createError = retryRes.error;
-        }
-
         if (createError) throw createError;
         currentPersonId = newPerson.id;
       } else {
         // Update existing member info first
-        let payload = getPersonData(currentAvatarUrl || null);
-        let { error: updateError } = await supabase
+        const { error: updateError } = await supabase
           .from("persons")
-          .update(payload)
+          .update(getPersonData(currentAvatarUrl || null))
           .eq("id", currentPersonId);
-
-        if (updateError && updateError.code === 'PGRST204') {
-          const { grave_address, ...rest } = payload;
-          const retryRes = await supabase
-            .from("persons")
-            .update(rest)
-            .eq("id", currentPersonId);
-          updateError = retryRes.error;
-        }
-
         if (updateError) throw updateError;
       }
 
@@ -950,19 +925,6 @@ export default function MemberForm({
                         />
                       </div>
                     </div>
-
-                    <div className="mt-4">
-                      <label className="block text-sm font-semibold text-stone-700 mb-2">
-                        Địa chỉ phần mộ
-                      </label>
-                      <input
-                        type="text"
-                        value={graveAddress}
-                        onChange={(e) => setGraveAddress(e.target.value)}
-                        placeholder="Ví dụ: Nghĩa trang quê nhà..."
-                        className={inputClasses}
-                      />
-                    </div>
                   </div>
                 </motion.div>
               )}
@@ -1064,6 +1026,21 @@ export default function MemberForm({
                 className={inputClasses}
               />
             </div>
+
+            {isDeceased && (
+              <div className="md:col-span-2">
+                <label className="flex items-center gap-1.5 text-sm font-semibold text-amber-900/80 mb-1.5">
+                  <MapPin className="size-4" /> Địa chỉ phần mộ
+                </label>
+                <input
+                  type="text"
+                  value={graveAddress}
+                  onChange={(e) => setGraveAddress(e.target.value)}
+                  placeholder="Ví dụ: Nghĩa trang quê nhà..."
+                  className={inputClasses}
+                />
+              </div>
+            )}
 
           </div>
         </motion.div>
