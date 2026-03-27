@@ -349,8 +349,15 @@ export default function MemberForm({
           .single();
 
         if (createError && createError.code === 'PGRST204') {
-          // Schema cache error, retry without grave_address
-          const { grave_address, ...rest } = payload;
+          // Schema cache error, retry without recently added columns
+          const {
+            grave_address,
+            hometown,
+            other_names,
+            is_eldest_son,
+            is_eldest_grandson,
+            ...rest
+          } = payload;
           const retryRes = await supabase
             .from("persons")
             .insert(rest)
@@ -371,7 +378,14 @@ export default function MemberForm({
           .eq("id", currentPersonId);
 
         if (updateError && updateError.code === 'PGRST204') {
-          const { grave_address, ...rest } = payload;
+          const {
+            grave_address,
+            hometown,
+            other_names,
+            is_eldest_son,
+            is_eldest_grandson,
+            ...rest
+          } = payload;
           const retryRes = await supabase
             .from("persons")
             .update(rest)

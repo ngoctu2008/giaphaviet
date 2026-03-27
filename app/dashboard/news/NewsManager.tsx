@@ -3,13 +3,7 @@
 import { News } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 import { Plus, Trash2, Edit2, Image as ImageIcon, Eye, EyeOff } from "lucide-react";
-import dynamic from "next/dynamic";
 import { useState } from "react";
-
-const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), {
-  ssr: false,
-  loading: () => <div className="h-[300px] mb-12 bg-stone-50 border border-stone-200 animate-pulse rounded-lg flex items-center justify-center text-stone-400">Đang tải trình soạn thảo...</div>
-});
 
 export default function NewsManager({
   initialNews,
@@ -218,13 +212,13 @@ export default function NewsManager({
                     <label className="block text-sm font-medium text-stone-700">Nội dung bài viết</label>
                   </div>
                   <div className="bg-white">
-                    {isModalOpen && (
-                      <RichTextEditor
-                        value={content}
-                        onChange={setContent}
-                        className="h-[300px] mb-12"
-                      />
-                    )}
+                    <textarea
+                      value={content}
+                      onChange={(e) => setContent(e.target.value)}
+                      className="w-full h-[300px] rounded-lg border-stone-200 focus:border-amber-500 focus:ring-amber-500 bg-stone-50 p-3 border resize-none"
+                      placeholder="Nhập nội dung bài viết..."
+                      required
+                    />
                   </div>
                 </div>
 

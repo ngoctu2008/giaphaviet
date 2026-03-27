@@ -25,6 +25,8 @@ export default function FinanceManager({
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   const [personId, setPersonId] = useState<string>("");
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleOpenModal = (transaction?: Transaction) => {
     if (transaction) {
@@ -44,12 +46,16 @@ export default function FinanceManager({
       setDate(new Date().toISOString().split("T")[0]);
       setPersonId("");
     }
+    setError(null);
     setIsModalOpen(true);
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!amount || !description || !date) return;
+
+    setIsSubmitting(true);
+    setError(null);
 
     let contributor_name = null;
     if (personId) {
@@ -71,32 +77,68 @@ export default function FinanceManager({
 
     const supabase = createClient();
 
-    if (editingTransaction) {
-      const { data, error } = await supabase
-        .from("transactions")
-        .update(payload)
-        .eq("id", editingTransaction.id)
-        .select()
-        .single();
+    try {
+      if (editingTransaction) {
+        let { data, error } = await supabase
+          .from("transactions")
+          .update(payload)
+          .eq("id", editingTransaction.id)
+          .select()
+          .single();
 
-      if (!error && data) {
-        setTransactions((prev) =>
-          prev.map((t) => (t.id === data.id ? data : t))
-        );
-      }
-    } else {
-      const { data, error } = await supabase
-        .from("transactions")
-        .insert([payload])
-        .select()
-        .single();
+        if (error && error.code === 'PGRST204') {
+          // Schema cache error, retry without person_id
+          const { person_id, ...rest } = payload;
+          const retryRes = await supabase
+            .from("transactions")
+            .update(rest)
+            .eq("id", editingTransaction.id)
+            .select()
+            .single();
+          data = retryRes.data;
+          error = retryRes.error;
+        }
 
-      if (!error && data) {
-        setTransactions([data, ...transactions]);
+        if (error) throw error;
+
+        if (data) {
+          setTransactions((prev) =>
+            prev.map((t) => (t.id === data.id ? data : t))
+          );
+        }
+      } else {
+        let { data, error } = await supabase
+          .from("transactions")
+          .insert([payload])
+          .select()
+          .single();
+
+        if (error && error.code === 'PGRST204') {
+          // Schema cache error, retry without person_id
+          const { person_id, ...rest } = payload;
+          const retryRes = await supabase
+            .from("transactions")
+            .insert([rest])
+            .select()
+            .single();
+          data = retryRes.data;
+          error = retryRes.error;
+        }
+
+        if (error) throw error;
+
+        if (data) {
+          setTransactions([data, ...transactions]);
+        }
       }
+
+      setIsModalOpen(false);
+    } catch (err: any) {
+      console.error("Error saving transaction:", err);
+      setError(err.message || "Đã xảy ra lỗi khi lưu giao dịch.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsModalOpen(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -267,6 +309,12 @@ export default function FinanceManager({
                 />
               </div>
 
+              {error && (
+                <div className="p-3 bg-rose-50 border border-rose-200 text-rose-600 rounded-lg text-sm">
+                  {error}
+                </div>
+              )}
+
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
@@ -275,8 +323,8 @@ export default function FinanceManager({
                 >
                   Hủy
                 </button>
-                <button type="submit" className="btn-primary flex-1">
-                  Lưu
+                <button disabled={isSubmitting} type="submit" className="btn-primary flex-1">
+                  {isSubmitting ? "Đang lưu..." : "Lưu"}
                 </button>
               </div>
             </form>
