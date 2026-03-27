@@ -232,10 +232,10 @@ export default async function DashboardLaunchpad() {
             <div className="p-8 flex flex-col items-center text-center flex-1 border-x border-b border-amber-900/5 rounded-b-[2rem]">
               <p className="text-amber-900/60 font-medium text-sm tracking-widest uppercase mb-2">Hôm nay</p>
               <h2 className="text-7xl font-bold text-red-800 tracking-tighter mb-4 font-serif drop-shadow-xs">
-                {lunar.lunarDayStr.replace('Ngày ', '')}
+                {lunar.lunarDay}
               </h2>
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/50 border border-amber-200/50 text-amber-900 text-sm font-medium mb-6">
-                Tháng {lunar.lunarMonthStr} · Năm {lunar.lunarYear}
+                Tháng {lunar.lunarMonth} · Năm {lunar.lunarYear}
               </div>
               <p className="text-stone-500 text-sm mb-8 pb-8 border-b border-amber-900/10 w-full flex items-center justify-center gap-2">
                 <CalendarDays className="size-4 opacity-50" /> Dương lịch: {lunar.solarStr}

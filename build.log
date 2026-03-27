@@ -1,0 +1,42 @@
+$ next build
+▲ Next.js 16.2.1 (Turbopack)
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 16.9s
+  Running TypeScript ...
+  Finished TypeScript in 9.7s ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/20) ...
+  Generating static pages using 3 workers (5/20)
+  Generating static pages using 3 workers (10/20)
+  Generating static pages using 3 workers (15/20)
+✓ Generating static pages using 3 workers (20/20) in 540ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /about
+├ ƒ /dashboard
+├ ƒ /dashboard/data
+├ ƒ /dashboard/events
+├ ƒ /dashboard/finance
+├ ƒ /dashboard/kinship
+├ ƒ /dashboard/lineage
+├ ƒ /dashboard/members
+├ ƒ /dashboard/members/[id]
+├ ƒ /dashboard/members/[id]/edit
+├ ƒ /dashboard/members/new
+├ ƒ /dashboard/news
+├ ƒ /dashboard/settings
+├ ƒ /dashboard/stats
+├ ƒ /dashboard/users
+├ ○ /login
+├ ○ /missing-db-config
+└ ○ /setup
+
+
+ƒ Proxy (Middleware)
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
