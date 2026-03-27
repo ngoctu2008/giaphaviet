@@ -55,7 +55,7 @@ DROP POLICY IF EXISTS "Admins can update settings" ON public.site_settings;
 CREATE POLICY "Admins can update settings" ON public.site_settings FOR UPDATE USING (public.is_admin()) WITH CHECK (public.is_admin());
 -- Only Admins can insert settings
 DROP POLICY IF EXISTS "Admins can insert settings" ON public.site_settings;
-CREATE POLICY "Admins can insert settings" ON public.site_settings FOR INSERT USING (public.is_admin());
+CREATE POLICY "Admins can insert settings" ON public.site_settings FOR INSERT WITH CHECK (public.is_admin());
 
 -- Insert default row if not exists
 INSERT INTO public.site_settings (id, site_name) VALUES (1, 'Gia phả Việt') ON CONFLICT (id) DO NOTHING;
