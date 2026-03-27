@@ -147,7 +147,7 @@ export const MindmapNode = memo(
                               alt={data.person.full_name}
                               width={40}
                               height={40}
-                              className="h-full w-full object-cover"
+                              className={`h-full w-full object-cover ${data.person.is_deceased ? "grayscale" : ""}`}
                             />
                           ) : (
                             <DefaultAvatar
@@ -237,7 +237,7 @@ export const MindmapNode = memo(
                                     alt={spouseData.person.full_name}
                                     width={32}
                                     height={32}
-                                    className="h-full w-full object-cover"
+                                    className={`h-full w-full object-cover ${spouseData.person.is_deceased ? "grayscale" : ""}`}
                                   />
                                 ) : (
                                   <DefaultAvatar

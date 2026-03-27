@@ -102,7 +102,7 @@ function PersonSelector({
                   alt={selected.full_name}
                   width={40}
                   height={40}
-                  className="h-full w-full object-cover"
+                  className={`h-full w-full object-cover ${(selected as any).is_deceased ? "grayscale" : ""}`}
                 />
               ) : (
                 <DefaultAvatar gender={selected.gender} size={40} />
@@ -183,7 +183,7 @@ function PersonSelector({
                             alt={p.full_name}
                             width={32}
                             height={32}
-                            className="h-full w-full object-cover"
+                            className={`h-full w-full object-cover ${(p as any).is_deceased ? "grayscale" : ""}`}
                           />
                         ) : (
                           <DefaultAvatar gender={p.gender} size={32} />

@@ -32,6 +32,22 @@ export default function Footer({
                   <span>✉️ {settings.footer_email}</span>
                )}
             </div>
+
+            {Array.isArray(settings.custom_links) && settings.custom_links.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-4 text-sm font-medium">
+                {settings.custom_links.map((link: any, index: number) => (
+                  <a
+                    key={index}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-amber-800 hover:text-amber-600 transition-colors underline underline-offset-4 decoration-amber-200 hover:decoration-amber-500"
+                  >
+                    {link.title}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -43,7 +59,7 @@ export default function Footer({
         )}
         <p className="flex items-center justify-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
           <a
-            href="https://github.com/homielab/giapha-os"
+            href="https://github.com/ngoctu2008/giaphaviet"
             target="_blank"
             rel="noopener noreferrer"
             className="font-semibold text-stone-600 hover:text-amber-700 transition-colors inline-flex items-center gap-1.5"
@@ -62,14 +78,12 @@ export default function Footer({
             </svg>
             Gia phả Việt
           </a>
-          by
+          phát triển bởi
           <a
-            href="https://homielab.com"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="mailto:ngoctu.dnkd@gmail.com"
             className="font-semibold text-[#8b0000] hover:text-[#b8860b] transition-colors inline-flex items-center gap-1.5"
           >
-            HomieLab
+            Phạm Ngọc Tú
           </a>
         </p>
       </div>

@@ -32,14 +32,30 @@ export default function DashboardHeader({ settings }: { settings?: SiteSettings 
             </h1>
           </Link>
         </div>
-        <div className="flex items-center gap-4">
-          <Link
-            href="/dashboard/members"
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-50 border border-stone-200 text-sm font-medium text-stone-700 hover:text-amber-700 hover:border-amber-200 hover:bg-amber-50 transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-network"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
-            Gia phả
-          </Link>
+        <div className="flex items-center gap-2 sm:gap-4">
+          <div className="hidden lg:flex items-center gap-2 mr-2">
+            <Link
+              href="/dashboard/members"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-50 border border-stone-200 text-sm font-medium text-stone-700 hover:text-amber-700 hover:border-amber-200 hover:bg-amber-50 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-network"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
+              Gia phả
+            </Link>
+            <Link
+              href="/dashboard/news"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-50 border border-stone-200 text-sm font-medium text-stone-700 hover:text-sky-700 hover:border-sky-200 hover:bg-sky-50 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-info"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+              Tin tức dòng họ
+            </Link>
+            <Link
+              href="/dashboard/finance"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-50 border border-stone-200 text-sm font-medium text-stone-700 hover:text-emerald-700 hover:border-emerald-200 hover:bg-emerald-50 transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-database"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg>
+              Sổ công đức
+            </Link>
+          </div>
           <HeaderMenu />
         </div>
       </div>

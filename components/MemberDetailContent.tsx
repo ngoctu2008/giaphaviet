@@ -134,7 +134,7 @@ export default function MemberDetailContent({
                 alt={person.full_name}
                 width={128}
                 height={128}
-                className="h-full w-full object-cover"
+                className={`h-full w-full object-cover ${person.is_deceased ? "grayscale" : ""}`}
               />
             ) : (
               <DefaultAvatar gender={person.gender} size={128} />
