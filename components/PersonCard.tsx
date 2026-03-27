@@ -46,7 +46,7 @@ export default function PersonCard({ person }: PersonCardProps) {
                 alt={person.full_name}
                 width={32}
                 height={32}
-                className="h-full w-full object-cover"
+                className={`w-full h-full object-cover ${person.is_deceased ? "grayscale" : ""}`}
               />
             ) : (
               <DefaultAvatar gender={person.gender} size={32} />

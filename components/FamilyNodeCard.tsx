@@ -72,7 +72,7 @@ export default function FamilyNodeCard({
                 unoptimized
                 src={person.avatar_url}
                 alt={person.full_name}
-                className="w-full h-full object-cover"
+                className={`w-full h-full object-cover ${person.is_deceased ? "grayscale" : ""}`}
                 width={64}
                 height={64}
               />

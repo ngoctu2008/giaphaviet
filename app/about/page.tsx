@@ -81,13 +81,11 @@ export default function AboutPage() {
                     thể xóa, xuất hoặc di chuyển dữ liệu bất cứ lúc nào.
                   </li>
                   <li>
-                    <strong className="text-stone-800">Demo công khai:</strong>{" "}
-                    Trang demo tại{" "}
-                    <code className="bg-white border border-stone-200 px-1 py-0.5 rounded text-[13px] text-amber-700">
-                      giapha-os.homielab.com
-                    </code>{" "}
-                    sử dụng dữ liệu mẫu hư cấu, không chứa thông tin của người
-                    thật. Không nên nhập thông tin cá nhân thật vào trang demo.
+                    <strong className="text-stone-800">Dự án mã nguồn mở:</strong>{" "}
+                    Đang được phát triển tại địa chỉ dự án:{" "}
+                    <a href="https://github.com/ngoctu2008/giaphaviet" target="_blank" rel="noopener noreferrer" className="font-semibold text-amber-700 hover:text-amber-800 underline underline-offset-2">
+                      https://github.com/ngoctu2008/giaphaviet
+                    </a>
                   </li>
                 </ul>
               </div>
@@ -106,10 +104,10 @@ export default function AboutPage() {
                 dụng phần mềm, hoặc muốn thảo luận thì xin vui lòng gửi email về
                 địa chỉ:{` `}
                 <a
-                  href="mailto:giaphaos@homielab.com"
+                  href="mailto:ngoctu.dnkd@gmail.com"
                   className="font-semibold text-amber-700 hover:text-amber-600 transition-colors inline-flex items-center gap-1.5 mt-2"
                 >
-                  giaphaos@homielab.com
+                  ngoctu.dnkd@gmail.com
                 </a>
               </p>
             </div>

@@ -43,7 +43,7 @@ export default function Footer({
         )}
         <p className="flex items-center justify-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
           <a
-            href="https://github.com/homielab/giapha-os"
+            href="https://github.com/ngoctu2008/giaphaviet"
             target="_blank"
             rel="noopener noreferrer"
             className="font-semibold text-stone-600 hover:text-amber-700 transition-colors inline-flex items-center gap-1.5"
@@ -62,14 +62,12 @@ export default function Footer({
             </svg>
             Gia phả Việt
           </a>
-          by
+          phát triển bởi
           <a
-            href="https://homielab.com"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="mailto:ngoctu.dnkd@gmail.com"
             className="font-semibold text-[#8b0000] hover:text-[#b8860b] transition-colors inline-flex items-center gap-1.5"
           >
-            HomieLab
+            Phạm Ngọc Tú
           </a>
         </p>
       </div>

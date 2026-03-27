@@ -21,6 +21,8 @@ export default function NewsManager({
   const [content, setContent] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const [isPublished, setIsPublished] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleOpenModal = (newsItem?: News) => {
     if (newsItem) {
@@ -36,12 +38,16 @@ export default function NewsManager({
       setThumbnailUrl("");
       setIsPublished(true);
     }
+    setError(null);
     setIsModalOpen(true);
   };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title || !content) return;
+
+    setIsSubmitting(true);
+    setError(null);
 
     const payload = {
       title,
@@ -52,35 +58,46 @@ export default function NewsManager({
 
     const supabase = createClient();
 
-    // get user ID
-    const { data: { user } } = await supabase.auth.getUser();
+    try {
+      // get user ID
+      const { data: { user } } = await supabase.auth.getUser();
 
-    if (editingNews) {
-      const { data, error } = await supabase
-        .from("news")
-        .update(payload)
-        .eq("id", editingNews.id)
-        .select()
-        .single();
+      if (editingNews) {
+        const { data, error } = await supabase
+          .from("news")
+          .update(payload)
+          .eq("id", editingNews.id)
+          .select()
+          .single();
 
-      if (!error && data) {
-        setNews((prev) =>
-          prev.map((n) => (n.id === data.id ? data : n))
-        );
+        if (error) throw error;
+
+        if (data) {
+          setNews((prev) =>
+            prev.map((n) => (n.id === data.id ? data : n))
+          );
+        }
+      } else {
+        const { data, error } = await supabase
+          .from("news")
+          .insert([{ ...payload, created_by: user?.id }])
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        if (data) {
+          setNews([data, ...news]);
+        }
       }
-    } else {
-      const { data, error } = await supabase
-        .from("news")
-        .insert([{ ...payload, created_by: user?.id }])
-        .select()
-        .single();
 
-      if (!error && data) {
-        setNews([data, ...news]);
-      }
+      setIsModalOpen(false);
+    } catch (err: any) {
+      console.error("Error saving news:", err);
+      setError(err.message || "Đã xảy ra lỗi khi lưu bài viết.");
+    } finally {
+      setIsSubmitting(false);
     }
-
-    setIsModalOpen(false);
   };
 
   const handleDelete = async (id: string) => {
@@ -248,6 +265,12 @@ export default function NewsManager({
                     Xuất bản (Hiển thị công khai)
                   </label>
                 </div>
+
+                {error && (
+                  <div className="p-3 bg-rose-50 border border-rose-200 text-rose-600 rounded-lg text-sm mt-4">
+                    {error}
+                  </div>
+                )}
               </form>
             </div>
 
@@ -259,8 +282,8 @@ export default function NewsManager({
               >
                 Hủy
               </button>
-              <button form="news-form" type="submit" className="btn-primary">
-                Lưu bài viết
+              <button disabled={isSubmitting} form="news-form" type="submit" className="btn-primary">
+                {isSubmitting ? "Đang lưu..." : "Lưu bài viết"}
               </button>
             </div>
           </div>
