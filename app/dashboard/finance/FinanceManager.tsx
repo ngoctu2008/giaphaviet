@@ -8,9 +8,11 @@ import { useState } from "react";
 export default function FinanceManager({
   initialTransactions,
   canEdit,
+  persons,
 }: {
   initialTransactions: any[];
   canEdit: boolean;
+  persons: { id: string; full_name: string }[];
 }) {
   const [transactions, setTransactions] = useState(initialTransactions);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,7 +24,7 @@ export default function FinanceManager({
   const [category, setCategory] = useState<TransactionCategory>("cong_duc");
   const [description, setDescription] = useState("");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
-  const [contributorName, setContributorName] = useState("");
+  const [personId, setPersonId] = useState<string>("");
 
   const handleOpenModal = (transaction?: Transaction) => {
     if (transaction) {
@@ -32,7 +34,7 @@ export default function FinanceManager({
       setCategory(transaction.category);
       setDescription(transaction.description);
       setDate(transaction.date);
-      setContributorName(transaction.contributor_name || "");
+      setPersonId(transaction.person_id || "");
     } else {
       setEditingTransaction(null);
       setAmount("");
@@ -40,7 +42,7 @@ export default function FinanceManager({
       setCategory("cong_duc");
       setDescription("");
       setDate(new Date().toISOString().split("T")[0]);
-      setContributorName("");
+      setPersonId("");
     }
     setIsModalOpen(true);
   };
@@ -49,13 +51,22 @@ export default function FinanceManager({
     e.preventDefault();
     if (!amount || !description || !date) return;
 
+    let contributor_name = null;
+    if (personId) {
+      const p = persons.find((person) => person.id === personId);
+      if (p) {
+        contributor_name = p.full_name;
+      }
+    }
+
     const payload = {
       amount: parseFloat(amount),
       type,
       category,
       description,
       date,
-      contributor_name: contributorName || null,
+      person_id: personId || null,
+      contributor_name: contributor_name,
     };
 
     const supabase = createClient();
@@ -231,13 +242,18 @@ export default function FinanceManager({
 
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1">Người đóng góp / nhận</label>
-                <input
-                  type="text"
-                  value={contributorName}
-                  onChange={(e) => setContributorName(e.target.value)}
+                <select
+                  value={personId}
+                  onChange={(e) => setPersonId(e.target.value)}
                   className="w-full rounded-lg border-stone-200 focus:border-amber-500 focus:ring-amber-500 bg-stone-50 p-2 border"
-                  placeholder="VD: Phạm Ngọc A"
-                />
+                >
+                  <option value="">-- Chọn thành viên --</option>
+                  {persons.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.full_name}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div>

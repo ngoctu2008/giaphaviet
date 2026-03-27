@@ -154,6 +154,15 @@ export default async function DashboardLaunchpad() {
       borderColor: "border-teal-200/60",
       hoverColor: "hover:border-teal-400 hover:shadow-teal-100",
     },
+    {
+      title: "Cấu hình chung",
+      description: "Tên trang, logo, thông tin liên hệ chân trang",
+      icon: <Network className="size-8 text-amber-600" />,
+      href: "/dashboard/settings",
+      bgColor: "bg-amber-50",
+      borderColor: "border-amber-200/60",
+      hoverColor: "hover:border-amber-400 hover:shadow-amber-100",
+    },
   ];
 
   return (

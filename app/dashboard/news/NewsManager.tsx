@@ -5,9 +5,11 @@ import { createClient } from "@/utils/supabase/client";
 import { Plus, Trash2, Edit2, Image as ImageIcon, Eye, EyeOff } from "lucide-react";
 import dynamic from "next/dynamic";
 import { useState } from "react";
-import "react-quill/dist/quill.snow.css";
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const RichTextEditor = dynamic(() => import("@/components/RichTextEditor"), {
+  ssr: false,
+  loading: () => <div className="h-[300px] mb-12 bg-stone-50 border border-stone-200 animate-pulse rounded-lg flex items-center justify-center text-stone-400">Đang tải trình soạn thảo...</div>
+});
 
 export default function NewsManager({
   initialNews,
@@ -216,21 +218,13 @@ export default function NewsManager({
                     <label className="block text-sm font-medium text-stone-700">Nội dung bài viết</label>
                   </div>
                   <div className="bg-white">
-                    <ReactQuill
-                      theme="snow"
-                      value={content}
-                      onChange={setContent}
-                      className="h-[300px] mb-12"
-                      modules={{
-                        toolbar: [
-                          [{ 'header': [1, 2, 3, false] }],
-                          ['bold', 'italic', 'underline', 'strike'],
-                          [{'list': 'ordered'}, {'list': 'bullet'}],
-                          ['link', 'image'],
-                          ['clean']
-                        ]
-                      }}
-                    />
+                    {isModalOpen && (
+                      <RichTextEditor
+                        value={content}
+                        onChange={setContent}
+                        className="h-[300px] mb-12"
+                      />
+                    )}
                   </div>
                 </div>
 
