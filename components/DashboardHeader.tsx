@@ -33,6 +33,13 @@ export default function DashboardHeader({ settings }: { settings?: SiteSettings 
           </Link>
         </div>
         <div className="flex items-center gap-4">
+          <Link
+            href="/dashboard/members"
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-50 border border-stone-200 text-sm font-medium text-stone-700 hover:text-amber-700 hover:border-amber-200 hover:bg-amber-50 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-network"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
+            Gia phả
+          </Link>
           <HeaderMenu />
         </div>
       </div>

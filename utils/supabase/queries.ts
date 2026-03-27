@@ -27,7 +27,9 @@ export const getSettings = cache(async () => {
     .single();
 
   if (error) {
-    console.error("Error fetching settings:", error);
+    if (error.code !== "PGRST205" && error.code !== "PGRST116") {
+      console.error("Error fetching settings:", error);
+    }
     return null;
   }
   return data;

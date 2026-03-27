@@ -11,10 +11,13 @@ const playfair = Playfair_Display({
   subsets: ["latin", "vietnamese"],
   variable: "--font-playfair",
 });
-export const metadata: Metadata = {
-  title: config.siteName,
-  description: config.siteName,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  // If you needed dynamically generated metadata, you'd fetch it here.
+  return {
+    title: config.siteName,
+    description: config.siteName,
+  };
+}
 
 export default function RootLayout({
   children,
