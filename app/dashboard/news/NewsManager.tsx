@@ -3,11 +3,7 @@
 import { News } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 import { Plus, Trash2, Edit2, Image as ImageIcon, Eye, EyeOff } from "lucide-react";
-import dynamic from "next/dynamic";
 import { useState } from "react";
-import "react-quill/dist/quill.snow.css";
-
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
 export default function NewsManager({
   initialNews,
@@ -216,20 +212,12 @@ export default function NewsManager({
                     <label className="block text-sm font-medium text-stone-700">Nội dung bài viết</label>
                   </div>
                   <div className="bg-white">
-                    <ReactQuill
-                      theme="snow"
+                    <textarea
                       value={content}
-                      onChange={setContent}
-                      className="h-[300px] mb-12"
-                      modules={{
-                        toolbar: [
-                          [{ 'header': [1, 2, 3, false] }],
-                          ['bold', 'italic', 'underline', 'strike'],
-                          [{'list': 'ordered'}, {'list': 'bullet'}],
-                          ['link', 'image'],
-                          ['clean']
-                        ]
-                      }}
+                      onChange={(e) => setContent(e.target.value)}
+                      className="w-full h-[300px] rounded-lg border-stone-200 focus:border-amber-500 focus:ring-amber-500 bg-stone-50 p-3 border resize-none"
+                      placeholder="Nhập nội dung bài viết..."
+                      required
                     />
                   </div>
                 </div>

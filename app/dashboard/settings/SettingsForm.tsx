@@ -49,7 +49,12 @@ export default function SettingsForm({
           ...formData,
         });
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        if (updateError.code === "PGRST205") {
+          throw new Error("Bảng 'site_settings' chưa được tạo trong CSDL. Vui lòng chạy file script migration.");
+        }
+        throw updateError;
+      }
 
       setSuccess(true);
       router.refresh();

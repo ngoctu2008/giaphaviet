@@ -29,6 +29,11 @@ export default async function FinancePage() {
     console.error("Error fetching transactions:", error);
   }
 
+  const { data: personsData } = await supabase
+    .from("persons")
+    .select("id, full_name")
+    .order("full_name", { ascending: true });
+
   // Calculate summaries
   const summaries = (transactions || []).reduce(
     (acc, t) => {
@@ -98,7 +103,11 @@ export default async function FinancePage() {
         </div>
       </div>
 
-      <FinanceManager initialTransactions={transactions || []} canEdit={canEdit} />
+      <FinanceManager
+        initialTransactions={transactions || []}
+        canEdit={canEdit}
+        persons={personsData || []}
+      />
     </div>
   );
 }
