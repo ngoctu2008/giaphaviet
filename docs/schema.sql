@@ -199,8 +199,13 @@ DROP POLICY IF EXISTS "Admins can insert persons" ON public.persons;
 DROP POLICY IF EXISTS "Admins can update persons" ON public.persons;
 DROP POLICY IF EXISTS "Admins can delete persons" ON public.persons;
 
+DROP POLICY IF EXISTS "Admins and Editors can insert persons" ON public.persons;
 CREATE POLICY "Admins and Editors can insert persons" ON public.persons FOR INSERT TO authenticated WITH CHECK (public.is_admin() OR public.is_editor());
+
+DROP POLICY IF EXISTS "Admins and Editors can update persons" ON public.persons;
 CREATE POLICY "Admins and Editors can update persons" ON public.persons FOR UPDATE TO authenticated USING (public.is_admin() OR public.is_editor()) WITH CHECK (public.is_admin() OR public.is_editor());
+
+DROP POLICY IF EXISTS "Admins and Editors can delete persons" ON public.persons;
 CREATE POLICY "Admins and Editors can delete persons" ON public.persons FOR DELETE TO authenticated USING (public.is_admin() OR public.is_editor());
 
 -- PERSON_DETAILS_PRIVATE POLICIES
@@ -219,8 +224,13 @@ DROP POLICY IF EXISTS "Admins can insert relationships" ON public.relationships;
 DROP POLICY IF EXISTS "Admins can update relationships" ON public.relationships;
 DROP POLICY IF EXISTS "Admins can delete relationships" ON public.relationships;
 
+DROP POLICY IF EXISTS "Admins and Editors can insert relationships" ON public.relationships;
 CREATE POLICY "Admins and Editors can insert relationships" ON public.relationships FOR INSERT TO authenticated WITH CHECK (public.is_admin() OR public.is_editor());
+
+DROP POLICY IF EXISTS "Admins and Editors can update relationships" ON public.relationships;
 CREATE POLICY "Admins and Editors can update relationships" ON public.relationships FOR UPDATE TO authenticated USING (public.is_admin() OR public.is_editor()) WITH CHECK (public.is_admin() OR public.is_editor());
+
+DROP POLICY IF EXISTS "Admins and Editors can delete relationships" ON public.relationships;
 CREATE POLICY "Admins and Editors can delete relationships" ON public.relationships FOR DELETE TO authenticated USING (public.is_admin() OR public.is_editor());
 
 -- CUSTOM_EVENTS POLICIES
