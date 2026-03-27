@@ -26,7 +26,7 @@ drop policy if exists "Admins can delete persons" on public.persons;
 
 -- INSERT
 drop policy if exists "Admins and Editors can insert persons" on public.persons;
-drop policy if exists "Admins and Editors can insert persons"
+create policy "Admins and Editors can insert persons"
 on public.persons
 for insert
 to authenticated
@@ -36,7 +36,7 @@ with check (
 
 -- UPDATE
 drop policy if exists "Admins and Editors can update persons" on public.persons;
-drop policy if exists "Admins and Editors can update persons"
+create policy "Admins and Editors can update persons"
 on public.persons
 for update
 to authenticated
@@ -49,7 +49,7 @@ with check (
 
 -- DELETE
 drop policy if exists "Admins and Editors can delete persons" on public.persons;
-drop policy if exists "Admins and Editors can delete persons"
+create policy "Admins and Editors can delete persons"
 on public.persons
 for delete
 to authenticated
@@ -64,7 +64,7 @@ drop policy if exists "Admins can delete relationships" on public.relationships;
 
 -- INSERT
 drop policy if exists "Admins and Editors can insert relationships" on public.relationships;
-drop policy if exists "Admins and Editors can insert relationships"
+create policy "Admins and Editors can insert relationships"
 on public.relationships
 for insert
 to authenticated
@@ -74,7 +74,7 @@ with check (
 
 -- UPDATE
 drop policy if exists "Admins and Editors can update relationships" on public.relationships;
-drop policy if exists "Admins and Editors can update relationships"
+create policy "Admins and Editors can update relationships"
 on public.relationships
 for update
 to authenticated
@@ -87,7 +87,7 @@ with check (
 
 -- DELETE
 drop policy if exists "Admins and Editors can delete relationships" on public.relationships;
-drop policy if exists "Admins and Editors can delete relationships"
+create policy "Admins and Editors can delete relationships"
 on public.relationships
 for delete
 to authenticated

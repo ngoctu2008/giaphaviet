@@ -24,6 +24,10 @@ body {
   color: var(--foreground);
 }
 
+img.grayscale {
+  filter: grayscale(100%);
+}
+
 /* Fix iOS auto-zoom when focusing on inputs */
 @media screen and (max-width: 768px) {
   input,
