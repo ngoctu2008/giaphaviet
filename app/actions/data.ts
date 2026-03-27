@@ -31,6 +31,10 @@ interface PersonExport {
   other_names: string | null;
   avatar_url: string | null;
   note: string | null;
+  hometown?: string | null;
+  grave_address?: string | null;
+  is_eldest_son?: boolean | null;
+  is_eldest_grandson?: boolean | null;
   // DB-managed fields (kept in export for traceability, stripped on import)
   created_at?: string;
   updated_at?: string;
@@ -77,7 +81,7 @@ interface BackupPayload {
 function sanitizePerson(
   p: PersonExport,
 ): Omit<PersonExport, "created_at" | "updated_at"> {
-  return {
+  const result: any = {
     id: p.id,
     full_name: p.full_name,
     gender: p.gender,
@@ -98,6 +102,13 @@ function sanitizePerson(
     avatar_url: p.avatar_url ?? null,
     note: p.note ?? null,
   };
+
+  if (p.hometown !== undefined) result.hometown = p.hometown;
+  if (p.grave_address !== undefined) result.grave_address = p.grave_address;
+  if (p.is_eldest_son !== undefined) result.is_eldest_son = p.is_eldest_son;
+  if (p.is_eldest_grandson !== undefined) result.is_eldest_grandson = p.is_eldest_grandson;
+
+  return result;
 }
 
 function sanitizeRelationship(
@@ -318,7 +329,15 @@ export async function importData(
 
   for (let i = 0; i < persons.length; i += CHUNK) {
     const chunk = persons.slice(i, i + CHUNK);
-    const { error } = await supabase.from("persons").insert(chunk);
+    let { error } = await supabase.from("persons").insert(chunk);
+
+    // Auto fallback for older schemas missing new columns
+    if (error && error.code === 'PGRST204') {
+      const strippedChunk = chunk.map(({ grave_address, hometown, other_names, is_eldest_son, is_eldest_grandson, ...rest }: any) => rest);
+      const retryRes = await supabase.from("persons").insert(strippedChunk);
+      error = retryRes.error;
+    }
+
     if (error)
       return {
         error: `Lỗi khi import persons (chunk ${i / CHUNK + 1}): ${error.message}`,
