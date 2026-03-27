@@ -32,6 +32,22 @@ export default function Footer({
                   <span>✉️ {settings.footer_email}</span>
                )}
             </div>
+
+            {Array.isArray(settings.custom_links) && settings.custom_links.length > 0 && (
+              <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-4 text-sm font-medium">
+                {settings.custom_links.map((link: any, index: number) => (
+                  <a
+                    key={index}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-amber-800 hover:text-amber-600 transition-colors underline underline-offset-4 decoration-amber-200 hover:decoration-amber-500"
+                  >
+                    {link.title}
+                  </a>
+                ))}
+              </div>
+            )}
           </div>
         )}
 

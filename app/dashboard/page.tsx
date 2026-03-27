@@ -1,6 +1,6 @@
 import { getTodayLunar } from "@/utils/dateHelpers";
 import { computeEvents } from "@/utils/eventHelpers";
-import { getIsAdmin, getSupabase } from "@/utils/supabase/queries";
+import { getIsAdmin, getSupabase, getSettings } from "@/utils/supabase/queries";
 import {
   ArrowRight,
   BarChart2,
@@ -12,8 +12,11 @@ import {
   Network,
   Star,
   Users,
+  Info,
+  HeartHandshake
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 /* ── Event type helpers ───────────────────────────────────────────── */
 const eventTypeConfig = {
@@ -40,6 +43,7 @@ const eventTypeConfig = {
 export default async function DashboardLaunchpad() {
   const isAdmin = await getIsAdmin();
   const supabase = await getSupabase();
+  const settings = await getSettings();
 
   /* ── Fetch events data ────────────────────────────────────────── */
   const { data: persons } = await supabase
@@ -165,112 +169,164 @@ export default async function DashboardLaunchpad() {
     },
   ];
 
+  const siteName = settings?.site_name || "Gia phả Việt";
+
   return (
-    <main className="flex-1 flex flex-col p-4 sm:p-8 max-w-7xl mx-auto w-full">
-      {/* <div className="mb-8 sm:mb-12 text-center sm:text-left">
-        <h1 className="title">Bảng điều khiển</h1>
-      </div> */}
+    <main className="flex-1 flex flex-col p-4 sm:p-8 max-w-7xl mx-auto w-full bg-stone-50/30">
 
-      {/* ── Today's Date & Upcoming Events ─────────────────── */}
-      <Link
-        href="/dashboard/events"
-        className="group relative block overflow-hidden rounded-3xl bg-white border border-stone-200/60 shadow-sm hover:shadow-stone-100 hover:border-stone-400 mb-10 transition-all duration-300 hover:-translate-y-1"
-      >
-        {/* Subtle background flair */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-amber-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none opacity-50"></div>
+      {/* ── Banner: Uống nước nhớ nguồn ─────────────────── */}
+      <div className="mb-10 w-full relative overflow-hidden rounded-3xl bg-linear-to-r from-red-950 via-red-900 to-red-950 shadow-2xl shadow-red-900/20 border border-red-800/50">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cream-paper.png')] opacity-10 mix-blend-overlay"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/20 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-red-500/20 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 pointer-events-none"></div>
 
-        <div className="relative p-6 sm:p-8 flex flex-col md:flex-row gap-6 sm:gap-8 items-center">
-          {/* Date section */}
-          <div className="md:w-[35%] w-full flex flex-col items-center md:items-start text-center md:text-left gap-4 md:border-r border-stone-100 md:pr-8">
-            <div className="size-16 rounded-2xl bg-stone-50 flex items-center justify-center shrink-0 border border-stone-100 shadow-sm text-stone-600 transition-transform duration-500 group-hover:scale-105 group-hover:shadow-md group-hover:border-stone-200">
-              <CalendarDays className="size-7" />
-            </div>
-            <div className="mt-1">
-              <p className="text-xl sm:text-2xl font-bold text-stone-800 tracking-tight">
-                {lunar.solarStr}
-              </p>
-              <div className="mt-3 inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-stone-50 border border-stone-100">
-                <span className="text-xs font-medium text-stone-500 uppercase tracking-wider">
-                  Âm lịch:
-                </span>
-                <span className="text-sm font-semibold text-stone-700">
-                  {lunar.lunarDayStr}
-                </span>
-              </div>
-              <p className="text-sm pl-1 flex items-center justify-center md:justify-start gap-1 text-stone-500 mt-2 font-medium">
-                Năm {lunar.lunarYear}
-              </p>
+        <div className="relative z-10 px-8 py-14 md:py-20 flex flex-col items-center justify-center text-center">
+          <div className="mb-6 size-20 md:size-24 bg-white/10 rounded-full p-1 backdrop-blur-sm border border-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.2)]">
+            <div className="w-full h-full rounded-full border-2 border-amber-400/50 flex items-center justify-center overflow-hidden bg-white">
+              {settings?.logo_url ? (
+                <Image src={settings.logo_url} alt="Logo" width={96} height={96} className="object-contain p-2" />
+              ) : (
+                <span className="text-amber-600 font-serif text-3xl font-bold">{siteName.charAt(0)}</span>
+              )}
             </div>
           </div>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-amber-400 tracking-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)] mb-4 uppercase">
+            {siteName}
+          </h1>
+          <p className="text-amber-200/90 text-lg md:text-2xl font-serif italic max-w-2xl tracking-wide drop-shadow-md">
+            "Cây có gốc mới nở cành xanh ngọn,
+            <br />
+            Nước có nguồn mới bể rộng sông sâu."
+          </p>
+        </div>
+      </div>
 
-          {/* Events summary */}
-          <div className="md:w-[65%] w-full flex-1">
-            {upcomingEvents.length > 0 ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-semibold text-stone-500 uppercase tracking-widest flex items-center gap-2.5">
-                    <span className="relative flex size-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full size-2 bg-amber-500"></span>
-                    </span>
-                    Sự kiện 30 ngày tới ({upcomingEvents.length})
-                  </p>
-                  <ArrowRight className="size-5 text-stone-300 group-hover:text-stone-500 group-hover:translate-x-1 transition-all duration-300" />
+      {/* ── Urgent Event Ribbon (Upcoming Death Anniversaries) ─────────────────── */}
+      {upcomingEvents.some(e => e.type === "death_anniversary" && e.daysUntil <= 7) && (
+        <Link href="/dashboard/events" className="group flex items-center gap-3 bg-linear-to-r from-red-600 to-red-500 text-white px-5 py-3 rounded-2xl mb-8 shadow-md hover:shadow-lg transition-all border border-red-400">
+          <div className="p-1.5 bg-white/20 rounded-full shrink-0 group-hover:scale-110 transition-transform">
+            <Flower2 className="size-5" />
+          </div>
+          <div className="flex-1 truncate">
+            <span className="font-bold uppercase text-sm tracking-wider mr-2">Sắp đến ngày giỗ:</span>
+            <span className="text-sm font-medium opacity-90 truncate">
+              {upcomingEvents.filter(e => e.type === "death_anniversary" && e.daysUntil <= 7).map(e => `${e.personName} (${e.daysUntil === 0 ? "Hôm nay" : e.daysUntil === 1 ? "Ngày mai" : e.daysUntil + " ngày nữa"})`).join(" • ")}
+            </span>
+          </div>
+          <ArrowRight className="size-4 opacity-70 group-hover:translate-x-1 group-hover:opacity-100 transition-all shrink-0" />
+        </Link>
+      )}
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8 mb-12">
+        {/* ── Events / Calendar Tear-off Style ─────────────────── */}
+        <div className="lg:col-span-1">
+          <Link
+            href="/dashboard/events"
+            className="group relative block overflow-hidden rounded-[2rem] bg-[#fdfbf7] border border-amber-900/10 shadow-lg hover:shadow-xl hover:border-amber-900/20 transition-all duration-300 h-full flex flex-col"
+          >
+            {/* Calendar top binder */}
+            <div className="h-10 bg-red-900 w-full flex items-center justify-center gap-4 px-6 border-b-4 border-red-950">
+              <div className="w-16 h-2 bg-white/20 rounded-full"></div>
+            </div>
+
+            <div className="p-8 flex flex-col items-center text-center flex-1 border-x border-b border-amber-900/5 rounded-b-[2rem]">
+              <p className="text-amber-900/60 font-medium text-sm tracking-widest uppercase mb-2">Hôm nay</p>
+              <h2 className="text-7xl font-bold text-red-800 tracking-tighter mb-4 font-serif drop-shadow-xs">
+                {lunar.lunarDayStr.replace('Ngày ', '')}
+              </h2>
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100/50 border border-amber-200/50 text-amber-900 text-sm font-medium mb-6">
+                Tháng {lunar.lunarMonthStr} · Năm {lunar.lunarYear}
+              </div>
+              <p className="text-stone-500 text-sm mb-8 pb-8 border-b border-amber-900/10 w-full flex items-center justify-center gap-2">
+                <CalendarDays className="size-4 opacity-50" /> Dương lịch: {lunar.solarStr}
+              </p>
+
+              <div className="w-full text-left">
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-bold text-amber-900 uppercase tracking-wider flex items-center gap-2">
+                    <Star className="size-4 text-amber-500" />
+                    Sự kiện sắp tới
+                  </h3>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {upcomingEvents.slice(0, 4).map((evt, i) => {
-                    const cfg = eventTypeConfig[evt.type];
-                    const Icon = cfg.icon;
-                    return (
-                      <div
-                        key={i}
-                        className="flex items-center gap-3.5 p-3 rounded-2xl bg-stone-50/50 hover:bg-stone-50 border border-transparent hover:border-stone-100 transition-all duration-300 cursor-pointer"
-                      >
-                        <div
-                          className={`size-10 rounded-xl ${cfg.bg} flex items-center justify-center shrink-0 shadow-sm border border-white`}
-                        >
-                          <Icon className={`size-4 ${cfg.color}`} />
+
+                {upcomingEvents.length > 0 ? (
+                  <div className="space-y-3">
+                    {upcomingEvents.slice(0, 3).map((evt, i) => {
+                      const cfg = eventTypeConfig[evt.type];
+                      const Icon = cfg.icon;
+                      return (
+                        <div key={i} className="flex items-start gap-3 p-3 rounded-xl bg-white border border-amber-900/5 shadow-xs">
+                          <div className={`mt-0.5 size-8 rounded-lg ${cfg.bg} flex items-center justify-center shrink-0`}>
+                            <Icon className={`size-4 ${cfg.color}`} />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-bold text-stone-800 truncate">{evt.personName}</p>
+                            <p className="text-xs text-stone-500 font-medium mt-0.5">
+                              {evt.daysUntil === 0 ? "Hôm nay" : evt.daysUntil === 1 ? "Ngày mai" : `${evt.daysUntil} ngày nữa`}
+                            </p>
+                          </div>
                         </div>
-                        <div className="min-w-0 flex-1">
-                          <span className="text-sm font-semibold text-stone-700 truncate block">
-                            {evt.personName}
-                          </span>
-                          <span className="text-xs text-stone-500 font-medium pt-0.5 block">
-                            {evt.daysUntil === 0
-                              ? "Hôm nay"
-                              : evt.daysUntil === 1
-                                ? "Ngày mai"
-                                : `${evt.daysUntil} ngày nữa`}{" "}
-                            · {evt.eventDateLabel}
-                          </span>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-                {upcomingEvents.length > 4 && (
-                  <p className="text-xs text-stone-400 mt-2 text-center sm:text-left font-medium">
-                    + {upcomingEvents.length - 4} sự kiện khác đang chờ...
-                  </p>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="py-6 text-center text-stone-400 text-sm bg-white rounded-xl border border-dashed border-amber-900/20">
+                    Không có sự kiện sắp tới.
+                  </div>
                 )}
               </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-full gap-3 opacity-80 py-6">
-                <div className="p-4 bg-stone-50 rounded-2xl border border-stone-100 text-stone-400 transition-transform duration-500 group-hover:scale-105 group-hover:text-stone-500">
-                  <CalendarDays className="size-6" />
+            </div>
+          </Link>
+        </div>
+
+        {/* ── Features & Merit Book ─────────────────── */}
+        <div className="lg:col-span-2 flex flex-col gap-6 sm:gap-8">
+          {/* Quick Access Grids */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+            {publicFeatures.slice(0,2).map((feat) => (
+              <Link
+                key={feat.href}
+                href={feat.href}
+                className={`group relative overflow-hidden flex flex-col p-6 rounded-[2rem] bg-white border border-amber-900/10 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300`}
+              >
+                <div className={`absolute top-0 right-0 w-32 h-32 ${feat.bgColor} rounded-full blur-[50px] -translate-y-1/2 translate-x-1/2 opacity-50 group-hover:opacity-100 transition-opacity`}></div>
+                <div className={`size-14 rounded-2xl flex items-center justify-center mb-6 ${feat.bgColor} text-amber-700 relative z-10 ring-1 ring-amber-900/5 shadow-inner group-hover:scale-110 transition-transform`}>
+                  {feat.icon}
                 </div>
-                <p className="text-stone-500 text-center font-medium px-4">
-                  Không có sự kiện nào trong 30 ngày tới.
+                <h4 className="text-xl font-serif font-bold text-stone-800 mb-2 relative z-10 group-hover:text-amber-700 transition-colors">
+                  {feat.title}
+                </h4>
+                <p className="text-sm text-stone-500 relative z-10">
+                  {feat.description}
                 </p>
-                <div className="flex items-center gap-2 text-sm text-stone-400 mt-1 font-medium group-hover:text-stone-600 transition-colors">
-                  <span>Xem sự kiện trong năm</span>
-                  <ArrowRight className="size-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            ))}
+          </div>
+
+          {/* Merit Book Highlight (Sổ công đức) */}
+          <Link href="/dashboard/finance" className="group relative block overflow-hidden rounded-[2rem] bg-linear-to-br from-[#8b0000] to-[#5a0000] text-amber-50 border border-red-950 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
+            <div className="absolute -right-10 -top-10 w-64 h-64 bg-amber-500/20 rounded-full blur-[80px] pointer-events-none"></div>
+
+            <div className="relative z-10 p-8 flex flex-col sm:flex-row items-center sm:justify-between gap-6">
+              <div className="text-center sm:text-left">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/50 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
+                  <HeartHandshake className="size-3.5" /> Vinh danh công đức
+                </div>
+                <h3 className="text-2xl md:text-3xl font-serif font-bold text-amber-400 mb-2 drop-shadow-sm">Sổ Vàng Dòng Họ</h3>
+                <p className="text-red-200/80 text-sm max-w-sm">Quản lý minh bạch, ghi nhận lòng thành tâm và sự đóng góp của con cháu muôn phương xây dựng tổ tiên.</p>
+              </div>
+              <div className="flex-shrink-0">
+                <div className="size-20 rounded-full bg-linear-to-br from-amber-400 to-amber-600 p-1 shadow-[0_0_30px_rgba(245,158,11,0.3)] group-hover:scale-105 transition-transform">
+                  <div className="w-full h-full rounded-full border-2 border-amber-200/50 flex items-center justify-center bg-[#8b0000]">
+                    <Database className="size-8 text-amber-400" />
+                  </div>
                 </div>
               </div>
-            )}
-          </div>
+            </div>
+          </Link>
         </div>
-      </Link>
+      </div>
 
       {/* ── Feature Grid ──────────────────────────────────── */}
       <div className="space-y-12">

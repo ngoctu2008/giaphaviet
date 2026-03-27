@@ -68,6 +68,7 @@ export interface SiteSettings {
   footer_email: string | null;
   footer_phone: string | null;
   footer_custom_text: string | null;
+  custom_links: any | null; // JSONB array of { title: string, url: string }
   updated_at: string;
 }
 
