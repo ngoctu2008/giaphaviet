@@ -99,10 +99,10 @@ export default function PersonSelector({
                   alt={currentPerson.full_name}
                   width={32}
                   height={32}
-                  className="h-full w-full object-cover"
+                  className={`h-full w-full object-cover ${currentPerson.is_deceased ? "grayscale" : ""}`}
                 />
               ) : (
-                <DefaultAvatar gender={currentPerson.gender} size={32} />
+                <DefaultAvatar gender={currentPerson.gender} size={32} isDeceased={currentPerson.is_deceased} />
               )
             ) : showAllOption && selectedId === null ? (
               <Database className="size-4" />
@@ -226,10 +226,10 @@ export default function PersonSelector({
                                 alt={person.full_name}
                                 width={32}
                                 height={32}
-                                className="h-full w-full object-cover"
+                                className={`h-full w-full object-cover ${person.is_deceased ? "grayscale" : ""}`}
                               />
                             ) : (
-                              <DefaultAvatar gender={person.gender} size={32} />
+                              <DefaultAvatar gender={person.gender} size={32} isDeceased={person.is_deceased} />
                             )}
                           </div>
                           <div

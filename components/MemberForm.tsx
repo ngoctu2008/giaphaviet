@@ -701,7 +701,7 @@ export default function MemberForm({
                   <img
                     src={avatarPreview}
                     alt="Avatar preview"
-                    className="w-full h-full object-cover"
+                    className={`w-full h-full object-cover ${isDeceased ? "grayscale" : ""}`}
                   />
                 ) : (
                   <span className="opacity-90">

@@ -1,16 +1,10 @@
 $ next dev
-⚠ Port 3000 is in use by an unknown process, using available port 3001 instead.
 ▲ Next.js 16.2.1 (Turbopack)
-- Local:         http://localhost:3001
-- Network:       http://192.168.0.2:3001
-✓ Ready in 1648ms
-⨯ Another next dev server is already running.
+- Local:         http://localhost:3000
+- Network:       http://192.168.0.2:3000
+✓ Ready in 751ms
 
-- Local:        http://localhost:3000
-- PID:          2505
-- Dir:          /app
-- Log:          .next/dev/logs/next-development.log
-
-Run kill 2505 to stop it.
+○ Compiling /missing-db-config ...
+ GET /missing-db-config 200 in 11.0s (next.js: 10.5s, proxy.ts: 11ms, application-code: 544ms)
+ GET /missing-db-config 200 in 159ms (next.js: 11ms, proxy.ts: 17ms, application-code: 131ms)
 [?25h
-error: script "dev" exited with code 1
