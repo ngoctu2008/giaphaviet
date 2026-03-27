@@ -10,6 +10,21 @@ export default async function SetupPage() {
   try {
     const schemaPath = path.join(process.cwd(), "docs", "schema.sql");
     schemaContent = await fs.readFile(schemaPath, "utf-8");
+
+    // Load and append all migration scripts to ensure the database is fully up-to-date
+    const migrationsDir = path.join(process.cwd(), "docs", "migrations");
+    try {
+      const files = await fs.readdir(migrationsDir);
+      const sqlFiles = files.filter(f => f.endsWith('.sql')).sort();
+
+      for (const file of sqlFiles) {
+        const filePath = path.join(migrationsDir, file);
+        const fileContent = await fs.readFile(filePath, "utf-8");
+        schemaContent += `\n\n-- ==========================================\n-- Migration: ${file}\n-- ==========================================\n\n${fileContent}`;
+      }
+    } catch (migrationError) {
+      console.warn("Could not read migrations directory, skipping migrations append.", migrationError);
+    }
   } catch (error) {
     console.error("Error reading schema.sql:", error);
     schemaContent =

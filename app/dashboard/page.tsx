@@ -56,6 +56,13 @@ export default async function DashboardLaunchpad() {
     .from("custom_events")
     .select("id, name, content, event_date, location, created_by");
 
+  const { data: recentNews, error: newsError } = await supabase
+    .from("news")
+    .select("id, title, thumbnail_url, created_at, content")
+    .eq("is_published", true)
+    .order("created_at", { ascending: false })
+    .limit(3);
+
   const allEvents = computeEvents(persons ?? [], customEvents ?? []);
   const upcomingEvents = allEvents.filter(
     (e) => e.daysUntil >= 0 && e.daysUntil <= 30,
@@ -101,33 +108,6 @@ export default async function DashboardLaunchpad() {
       borderColor: "border-purple-200/60",
       hoverColor: "hover:border-purple-400 hover:shadow-purple-100",
     },
-    {
-      title: "Tin tức dòng họ",
-      description: "Xem và quản lý các bài viết, thông báo chung",
-      icon: <CalendarDays className="size-8 text-sky-600" />,
-      href: "/dashboard/news",
-      bgColor: "bg-sky-50",
-      borderColor: "border-sky-200/60",
-      hoverColor: "hover:border-sky-400 hover:shadow-sky-100",
-    },
-    {
-      title: "Sổ công đức",
-      description: "Quản lý thu chi, quỹ chung, khuyến học",
-      icon: <Database className="size-8 text-emerald-600" />,
-      href: "/dashboard/finance",
-      bgColor: "bg-emerald-50",
-      borderColor: "border-emerald-200/60",
-      hoverColor: "hover:border-emerald-400 hover:shadow-emerald-100",
-    },
-    // {
-    //   title: "Giới thiệu & Liên hệ",
-    //   description: "Thông tin về ứng dụng và đội ngũ phát triển",
-    //   icon: <Info className="size-8 text-stone-600" />,
-    //   href: "/about",
-    //   bgColor: "bg-stone-50",
-    //   borderColor: "border-stone-200/60",
-    //   hoverColor: "hover:border-stone-400 hover:shadow-stone-100",
-    // },
   ];
 
   const adminFeatures = [
@@ -282,8 +262,8 @@ export default async function DashboardLaunchpad() {
         {/* ── Features & Merit Book ─────────────────── */}
         <div className="lg:col-span-2 flex flex-col gap-6 sm:gap-8">
           {/* Quick Access Grids */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            {publicFeatures.slice(0,2).map((feat) => (
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+            {publicFeatures.map((feat) => (
               <Link
                 key={feat.href}
                 href={feat.href}
@@ -302,6 +282,40 @@ export default async function DashboardLaunchpad() {
               </Link>
             ))}
           </div>
+
+          {/* News Slider / Recent News */}
+          {recentNews && recentNews.length > 0 && (
+            <div className="bg-white rounded-[2rem] border border-amber-900/10 shadow-sm overflow-hidden p-6 relative">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-serif font-bold text-stone-800 flex items-center gap-2">
+                  <Info className="size-5 text-sky-600" />
+                  Tin tức dòng họ
+                </h3>
+                <Link href="/dashboard/news" className="text-sm font-medium text-sky-600 hover:text-sky-700 flex items-center gap-1">
+                  Xem tất cả <ArrowRight className="size-3" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {recentNews.map((n: any) => (
+                  <Link key={n.id} href="/dashboard/news" className="group block bg-stone-50 rounded-xl border border-stone-100 overflow-hidden hover:border-sky-200 hover:shadow-md transition-all">
+                    <div className="h-32 bg-stone-200 relative overflow-hidden">
+                      {n.thumbnail_url ? (
+                        <Image src={n.thumbnail_url} alt={n.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center bg-stone-100 text-stone-300">
+                          <Info className="size-8" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="p-3">
+                      <p className="text-xs text-stone-500 mb-1">{new Date(n.created_at).toLocaleDateString('vi-VN')}</p>
+                      <h4 className="text-sm font-bold text-stone-800 line-clamp-2 group-hover:text-sky-700 transition-colors">{n.title}</h4>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Merit Book Highlight (Sổ công đức) */}
           <Link href="/dashboard/finance" className="group relative block overflow-hidden rounded-[2rem] bg-linear-to-br from-[#8b0000] to-[#5a0000] text-amber-50 border border-red-950 shadow-xl hover:shadow-2xl transition-all duration-300">
