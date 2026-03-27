@@ -25,7 +25,8 @@ drop policy if exists "Admins can update persons" on public.persons;
 drop policy if exists "Admins can delete persons" on public.persons;
 
 -- INSERT
-create policy "Admins and Editors can insert persons"
+drop policy if exists "Admins and Editors can insert persons" on public.persons;
+drop policy if exists "Admins and Editors can insert persons"
 on public.persons
 for insert
 to authenticated
@@ -34,7 +35,8 @@ with check (
 );
 
 -- UPDATE
-create policy "Admins and Editors can update persons"
+drop policy if exists "Admins and Editors can update persons" on public.persons;
+drop policy if exists "Admins and Editors can update persons"
 on public.persons
 for update
 to authenticated
@@ -46,7 +48,8 @@ with check (
 );
 
 -- DELETE
-create policy "Admins and Editors can delete persons"
+drop policy if exists "Admins and Editors can delete persons" on public.persons;
+drop policy if exists "Admins and Editors can delete persons"
 on public.persons
 for delete
 to authenticated
@@ -60,7 +63,8 @@ drop policy if exists "Admins can update relationships" on public.relationships;
 drop policy if exists "Admins can delete relationships" on public.relationships;
 
 -- INSERT
-create policy "Admins and Editors can insert relationships"
+drop policy if exists "Admins and Editors can insert relationships" on public.relationships;
+drop policy if exists "Admins and Editors can insert relationships"
 on public.relationships
 for insert
 to authenticated
@@ -69,7 +73,8 @@ with check (
 );
 
 -- UPDATE
-create policy "Admins and Editors can update relationships"
+drop policy if exists "Admins and Editors can update relationships" on public.relationships;
+drop policy if exists "Admins and Editors can update relationships"
 on public.relationships
 for update
 to authenticated
@@ -81,7 +86,8 @@ with check (
 );
 
 -- DELETE
-create policy "Admins and Editors can delete relationships"
+drop policy if exists "Admins and Editors can delete relationships" on public.relationships;
+drop policy if exists "Admins and Editors can delete relationships"
 on public.relationships
 for delete
 to authenticated
