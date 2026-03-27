@@ -77,6 +77,7 @@ Chỉ cần khoảng 10 -> 15 phút là bạn có thể tự dựng hệ thống
 4. Vào **Project Settings → API**, giữ lại 2 giá trị này để dùng ở bước tiếp theo:
    - `Project URL`
    - `Project API Keys`
+5. (Quan trọng) Chạy lần lượt các file SQL trong thư mục `docs/migrations/` ở phần **SQL Editor** của Supabase để tạo các bảng dữ liệu (Sổ công đức, Tin tức, Cấu hình).
 
 ---
 
