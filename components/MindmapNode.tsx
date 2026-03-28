@@ -153,6 +153,7 @@ export const MindmapNode = memo(
                             <DefaultAvatar
                               gender={data.person.gender}
                               size={40}
+                              isDeceased={data.person.is_deceased}
                             />
                           )}
                         </div>
@@ -243,6 +244,7 @@ export const MindmapNode = memo(
                                   <DefaultAvatar
                                     gender={spouseData.person.gender}
                                     size={32}
+                                    isDeceased={spouseData.person.is_deceased}
                                   />
                                 )}
                               </div>

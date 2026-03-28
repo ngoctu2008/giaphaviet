@@ -18,6 +18,9 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+
 /* ── Event type helpers ───────────────────────────────────────────── */
 const eventTypeConfig = {
   birthday: {
@@ -164,7 +167,7 @@ export default async function DashboardLaunchpad() {
           <div className="mb-6 size-20 md:size-24 bg-white/10 rounded-full p-1 backdrop-blur-sm border border-amber-500/30 shadow-[0_0_30px_rgba(245,158,11,0.2)]">
             <div className="w-full h-full rounded-full border-2 border-amber-400/50 flex items-center justify-center overflow-hidden bg-white">
               {settings?.logo_url ? (
-                <Image src={settings.logo_url} alt="Logo" width={96} height={96} className="object-contain p-2" />
+                <img src={settings.logo_url} alt="Logo" className="w-full h-full object-contain p-2" />
               ) : (
                 <span className="text-amber-600 font-serif text-3xl font-bold">{siteName.charAt(0)}</span>
               )}
@@ -297,15 +300,23 @@ export default async function DashboardLaunchpad() {
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {recentNews.map((n: any) => (
-                  <Link key={n.id} href="/dashboard/news" className="group block bg-stone-50 rounded-xl border border-stone-100 overflow-hidden hover:border-sky-200 hover:shadow-md transition-all">
+                  <Link key={n.id} href={`/dashboard/news/${n.id}`} className="group block bg-stone-50 rounded-xl border border-stone-100 overflow-hidden hover:border-sky-200 hover:shadow-md transition-all">
                     <div className="h-32 bg-stone-200 relative overflow-hidden">
                       {n.thumbnail_url ? (
-                        <Image src={n.thumbnail_url} alt={n.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-stone-100 text-stone-300">
-                          <Info className="size-8" />
-                        </div>
-                      )}
+                        <img
+                          src={n.thumbnail_url}
+                          alt={n.title}
+                          className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                            const fallback = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
+                            if (fallback) fallback.style.display = 'flex';
+                          }}
+                        />
+                      ) : null}
+                      <div className={`absolute inset-0 items-center justify-center bg-stone-100 text-stone-300 ${n.thumbnail_url ? 'hidden' : 'flex'}`}>
+                        <Info className="size-8" />
+                      </div>
                     </div>
                     <div className="p-3">
                       <p className="text-xs text-stone-500 mb-1">{new Date(n.created_at).toLocaleDateString('vi-VN')}</p>

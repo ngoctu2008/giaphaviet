@@ -49,7 +49,7 @@ export default function PersonCard({ person }: PersonCardProps) {
                 className={`w-full h-full object-cover ${person.is_deceased ? "grayscale" : ""}`}
               />
             ) : (
-              <DefaultAvatar gender={person.gender} size={32} />
+              <DefaultAvatar gender={person.gender} size={32} isDeceased={person.is_deceased} />
             )}
           </div>
           {/* Gender Indicator Icon */}
