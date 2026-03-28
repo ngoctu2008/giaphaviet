@@ -21,10 +21,7 @@ export default async function NewsPage() {
   const supabase = await getSupabase();
   const { data: newsItems, error } = await supabase
     .from("news")
-    .select(`
-      *,
-      profiles:created_by (role)
-    `)
+    .select("*")
     .order("created_at", { ascending: false });
 
   if (error && error.code !== "PGRST205" && error.code !== "PGRST116") {
