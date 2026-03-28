@@ -64,7 +64,7 @@ export default function FamilyNodeCard({
           <div
             className={`
               h-10 w-10 sm:h-12 sm:w-12 md:h-14 md:w-14 rounded-full flex items-center justify-center text-[10px] sm:text-xs md:text-sm text-white overflow-hidden shrink-0 shadow-lg ring-2 ring-white transition-transform duration-300 group-hover:scale-105
-              ${getAvatarBg(person.gender)}
+              ${person.is_deceased ? "grayscale" : getAvatarBg(person.gender)}
             `}
           >
             {person.avatar_url ? (
