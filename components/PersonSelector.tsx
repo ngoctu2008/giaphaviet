@@ -85,7 +85,7 @@ export default function PersonSelector({
             className={`size-8 rounded-full flex items-center justify-center text-xs font-bold overflow-hidden ring-2 ring-white shadow-xs
             ${
               currentPerson
-                ? `${getAvatarBg(currentPerson.gender)} text-white`
+                ? `${currentPerson.is_deceased ? "grayscale" : getAvatarBg(currentPerson.gender)} text-white`
                 : showAllOption && selectedId === null
                   ? "bg-stone-500 text-white"
                   : "bg-stone-100 text-stone-400"
@@ -217,7 +217,7 @@ export default function PersonSelector({
                         <div className="relative shrink-0">
                           <div
                             className={`size-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white overflow-hidden ring-1 ring-white shadow-xs
-                            ${getAvatarBg(person.gender)}`}
+                            ${person.is_deceased ? "grayscale" : getAvatarBg(person.gender)}`}
                           >
                             {person.avatar_url ? (
                               <Image

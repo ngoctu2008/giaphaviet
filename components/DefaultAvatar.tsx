@@ -30,7 +30,7 @@ export default function DefaultAvatar({
       unoptimized
       src={`/avatar/${AVATAR_VERSION}/female.svg`}
       alt="Female"
-      className={`w-full h-full object-cover ${isDeceased ? "grayscale" : ""}`}
+      className={`w-full h-full object-cover ${getAvatarBg(gender || "female")} ${isDeceased ? "grayscale" : ""}`}
       width={size}
       height={size}
     />
