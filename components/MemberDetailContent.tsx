@@ -137,7 +137,7 @@ export default function MemberDetailContent({
                 className={`h-full w-full object-cover ${person.is_deceased ? "grayscale" : ""}`}
               />
             ) : (
-              <DefaultAvatar gender={person.gender} size={128} />
+              <DefaultAvatar gender={person.gender} size={128} isDeceased={person.is_deceased} />
             )}
           </div>
           {/* Gender Indicator Icon */}

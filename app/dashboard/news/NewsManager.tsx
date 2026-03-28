@@ -4,6 +4,8 @@ import { News } from "@/types";
 import { createClient } from "@/utils/supabase/client";
 import { Plus, Trash2, Edit2, Image as ImageIcon, Eye, EyeOff } from "lucide-react";
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function NewsManager({
   initialNews,
@@ -29,6 +31,7 @@ export default function NewsManager({
   const [isPublished, setIsPublished] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
 
   const handleOpenModal = (newsItem?: News) => {
     if (newsItem) {
@@ -98,6 +101,7 @@ export default function NewsManager({
       }
 
       setIsModalOpen(false);
+      router.refresh();
     } catch (err: any) {
       console.error("Error saving news:", err);
       setError(err.message || "Đã xảy ra lỗi khi lưu bài viết.");
@@ -112,6 +116,7 @@ export default function NewsManager({
     const { error } = await supabase.from("news").delete().eq("id", id);
     if (!error) {
       setNews((prev) => prev.filter((n) => n.id !== id));
+      router.refresh();
     }
   };
 
@@ -131,18 +136,28 @@ export default function NewsManager({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {news.map((n) => (
           <div key={n.id} className="bg-white rounded-2xl shadow-sm border border-stone-200 overflow-hidden flex flex-col transition-all hover:shadow-md">
-            <div className="relative h-48 bg-stone-100 flex items-center justify-center">
+            <Link href={`/dashboard/news/${n.id}`} className="relative h-48 bg-stone-100 flex items-center justify-center group/img">
               {n.thumbnail_url ? (
-                <img src={n.thumbnail_url} alt={n.title} className="absolute inset-0 w-full h-full object-cover" />
-              ) : (
-                <ImageIcon className="w-12 h-12 text-stone-300" />
-              )}
+                <img
+                  src={n.thumbnail_url}
+                  alt={n.title}
+                  className="absolute inset-0 w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    const fallback = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
+                    if (fallback) fallback.style.display = 'flex';
+                  }}
+                />
+              ) : null}
+              <div className={`absolute inset-0 items-center justify-center text-stone-300 ${n.thumbnail_url ? 'hidden' : 'flex'} group-hover/img:scale-110 transition-transform duration-500`}>
+                <ImageIcon className="w-12 h-12" />
+              </div>
               {!n.is_published && (
                 <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1 backdrop-blur-sm">
                   <EyeOff className="w-3 h-3" /> Bản nháp
                 </div>
               )}
-            </div>
+            </Link>
 
             <div className="p-5 flex flex-col flex-1">
               <h3 className="text-lg font-bold text-stone-800 line-clamp-2 mb-2">{n.title}</h3>

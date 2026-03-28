@@ -77,7 +77,7 @@ export default function FamilyNodeCard({
                 height={64}
               />
             ) : (
-              <DefaultAvatar gender={person.gender} size={64} />
+              <DefaultAvatar gender={person.gender} size={64} isDeceased={person.is_deceased} />
             )}
           </div>
         </div>
