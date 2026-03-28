@@ -307,11 +307,6 @@ export default async function DashboardLaunchpad() {
                           src={n.thumbnail_url}
                           alt={n.title}
                           className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                            const fallback = (e.target as HTMLImageElement).nextElementSibling as HTMLElement;
-                            if (fallback) fallback.style.display = 'flex';
-                          }}
                         />
                       ) : null}
                       <div className={`absolute inset-0 items-center justify-center bg-stone-100 text-stone-300 ${n.thumbnail_url ? 'hidden' : 'flex'}`}>

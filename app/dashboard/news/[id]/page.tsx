@@ -12,7 +12,7 @@ export default async function NewsDetailPage({ params }: { params: { id: string 
 
   const { data: news, error } = await supabase
     .from("news")
-    .select(`*, profiles:created_by (role)`)
+    .select("*")
     .eq("id", id)
     .single();
 
