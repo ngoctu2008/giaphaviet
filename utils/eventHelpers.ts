@@ -158,7 +158,20 @@ export function computeEvents(
           lDay = lunar.getDay();
         }
 
-        const next = nextSolarForLunar(lMonth, lDay, today);
+        // Ngày giỗ is traditionally 1 day before the date of death
+        let annivDay = lDay - 1;
+        let annivMonth = lMonth;
+
+        if (annivDay === 0) {
+          annivMonth = lMonth - 1;
+          if (annivMonth === 0) {
+            annivMonth = 12;
+          }
+          // Defaulting to 30 for the previous month's last day
+          annivDay = 30;
+        }
+
+        const next = nextSolarForLunar(annivMonth, annivDay, today);
         if (!next) continue;
 
         const daysUntil = Math.round(
@@ -171,7 +184,7 @@ export function computeEvents(
           type: "death_anniversary",
           nextOccurrence: next,
           daysUntil,
-          eventDateLabel: `${lDay.toString().padStart(2, "0")}/${lMonth.toString().padStart(2, "0")} ÂL`,
+          eventDateLabel: `${annivDay.toString().padStart(2, "0")}/${annivMonth.toString().padStart(2, "0")} ÂL`,
           originYear: (p.death_lunar_year ?? p.death_year) || null,
           originMonth: p.death_lunar_month ?? p.death_month,
           originDay: p.death_lunar_day ?? p.death_day,
@@ -191,7 +204,7 @@ export function computeEvents(
           );
           const currentLunarYear = todaySolar.getLunar().getYear();
           try {
-            const pastLunar = LunarClass.fromYmd(currentLunarYear, lMonth, lDay);
+            const pastLunar = LunarClass.fromYmd(currentLunarYear, annivMonth, annivDay);
             const pastSolar = pastLunar.getSolar();
             const pastDate = new Date(pastSolar.getYear(), pastSolar.getMonth() - 1, pastSolar.getDay());
             if (pastDate < today) {

@@ -1,10 +1,18 @@
-$ next dev
-▲ Next.js 16.2.1 (Turbopack)
-- Local:         http://localhost:3000
-- Network:       http://192.168.0.2:3000
-✓ Ready in 751ms
 
-○ Compiling /missing-db-config ...
- GET /missing-db-config 200 in 11.0s (next.js: 10.5s, proxy.ts: 11ms, application-code: 544ms)
- GET /missing-db-config 200 in 159ms (next.js: 11ms, proxy.ts: 17ms, application-code: 131ms)
+> giapha-os@0.1.0 dev
+> next dev
+
+⚠ Port 3000 is in use by an unknown process, using available port 3002 instead.
+▲ Next.js 16.2.1 (Turbopack)
+- Local:         http://localhost:3002
+- Network:       http://192.168.0.2:3002
+- Environments: .env.local
+✓ Ready in 581ms
+\xe2 GET /login 200 in 2.3s (next.js: 1696ms, proxy.ts: 15ms, application-code: 577ms)
+01
+- PID:          163070
+- Dir:          /app
+- Log:          .next/dev/logs/next-development.log
+
+Run kill 163070 to stop it.
 [?25h
