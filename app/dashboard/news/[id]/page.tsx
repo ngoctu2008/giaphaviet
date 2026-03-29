@@ -6,7 +6,7 @@ import { notFound } from "next/navigation";
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
 
-export default async function NewsDetailPage({ params }: { params: { id: string } }) {
+export default async function NewsDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const supabase = await getSupabase();
   const { id } = await params;
 

@@ -2,9 +2,10 @@
 
 import { SiteSettings } from "@/types";
 import { createClient } from "@/utils/supabase/client";
-import { Loader2, Save, Plus, Trash2 } from "lucide-react";
+import { Loader2, Save, Plus, Trash2, Bell, BellOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 
 export default function SettingsForm({
   initialSettings,
@@ -12,6 +13,7 @@ export default function SettingsForm({
   initialSettings: SiteSettings | null;
 }) {
   const router = useRouter();
+  const { isSupported, subscription, isLoading: isPushLoading, subscribeToPush, unsubscribeFromPush } = usePushNotifications();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -292,6 +294,74 @@ export default function SettingsForm({
             )}
           </div>
         </div>
+      </div>
+
+      <div className="space-y-4">
+        <h3 className="text-lg font-medium text-stone-900 border-b pb-2">
+          Cài đặt Thông báo (Thông báo đẩy)
+        </h3>
+        <p className="text-sm text-stone-600">
+          Nhận thông báo ngay trên trình duyệt hoặc điện thoại khi có tin tức mới hoặc sắp đến ngày giỗ.
+        </p>
+
+        {isPushLoading ? (
+          <div className="flex items-center gap-2 text-stone-500 text-sm">
+            <Loader2 className="w-4 h-4 animate-spin" /> Đang kiểm tra trạng thái...
+          </div>
+        ) : !isSupported ? (
+          <div className="text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-100">
+            Trình duyệt của bạn không hỗ trợ thông báo đẩy hoặc bạn đang mở web ở chế độ riêng tư/không an toàn.
+          </div>
+        ) : subscription ? (
+          <div className="flex items-center justify-between bg-green-50 p-4 rounded-xl border border-green-200">
+            <div className="flex items-center gap-3">
+              <div className="bg-green-100 p-2 rounded-full">
+                <Bell className="w-5 h-5 text-green-700" />
+              </div>
+              <div>
+                <p className="font-medium text-green-900">Đã bật thông báo</p>
+                <p className="text-sm text-green-700">Thiết bị này sẽ nhận được thông báo.</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={unsubscribeFromPush}
+              className="text-sm font-medium text-red-600 hover:text-red-700 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-1.5"
+            >
+              <BellOff className="w-4 h-4" /> Tắt
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center justify-between bg-stone-50 p-4 rounded-xl border border-stone-200">
+            <div className="flex items-center gap-3">
+              <div className="bg-stone-200 p-2 rounded-full">
+                <BellOff className="w-5 h-5 text-stone-600" />
+              </div>
+              <div>
+                <p className="font-medium text-stone-900">Thông báo đang tắt</p>
+                <p className="text-sm text-stone-500">Bật để không bỏ lỡ tin tức quan trọng.</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  const perm = await Notification.requestPermission();
+                  if (perm === "granted") {
+                    await subscribeToPush();
+                  } else {
+                    setError("Bạn đã từ chối cấp quyền thông báo. Hãy kiểm tra lại cài đặt trình duyệt.");
+                  }
+                } catch (err: any) {
+                  setError(err.message || "Không thể bật thông báo.");
+                }
+              }}
+              className="text-sm font-medium text-white bg-amber-600 hover:bg-amber-700 px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5 shadow-sm"
+            >
+              <Bell className="w-4 h-4" /> Bật thông báo
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="pt-6 flex justify-end">
