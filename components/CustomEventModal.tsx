@@ -127,6 +127,7 @@ export default function CustomEventModal({
       };
 
       let resultError;
+      let insertedData = null;
       if (eventToEdit) {
         const { error: err } = await supabase
           .from("custom_events")
@@ -134,13 +135,34 @@ export default function CustomEventModal({
           .eq("id", eventToEdit.id);
         resultError = err;
       } else {
-        const { error: err } = await supabase
+        const { error: err, data } = await supabase
           .from("custom_events")
-          .insert([payload]);
+          .insert([payload])
+          .select();
         resultError = err;
+        if (data && data.length > 0) {
+          insertedData = data[0];
+        }
       }
 
       if (resultError) throw resultError;
+
+      // If it's a newly created event, send a push notification to all subscribers
+      if (!eventToEdit && insertedData) {
+        try {
+          await fetch("/api/push/send", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title: "Sự kiện mới: " + insertedData.name,
+              body: "Ngày diễn ra: " + (insertedData.event_date || "Đã cập nhật"),
+              url: "/dashboard/events"
+            })
+          });
+        } catch (pushErr) {
+          console.error("Lỗi khi gửi thông báo đẩy sự kiện:", pushErr);
+        }
+      }
 
       onSuccess();
       onClose();
