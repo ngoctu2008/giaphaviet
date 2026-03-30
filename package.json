@@ -4,13 +4,16 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@ducanh2912/next-pwa": "^10.2.9",
     "@supabase/ssr": "^0.9.0",
     "@supabase/supabase-js": "^2.100.0",
+    "@types/minimatch": "^6.0.0",
+    "@types/web-push": "^3.6.4",
     "d3": "^7.9.0",
     "framer-motion": "^12.38.0",
     "html-to-image": "^1.11.13",
@@ -19,10 +22,12 @@
     "lucide-react": "^1.7.0",
     "lunar-javascript": "^1.7.7",
     "next": "16.2.1",
+    "next-pwa": "^5.6.0",
     "papaparse": "^5.5.3",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-quill": "^2.0.0"
+    "react-quill": "^2.0.0",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
