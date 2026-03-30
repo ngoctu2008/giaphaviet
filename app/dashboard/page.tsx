@@ -79,7 +79,7 @@ export default async function DashboardLaunchpad() {
       title: "Cây gia phả",
       description: "Xem và tương tác với sơ đồ dòng họ",
       icon: <Network className="size-8 text-amber-600" />,
-      href: "/dashboard/members",
+      href: "/dashboard/members?view=tree",
       bgColor: "bg-amber-50",
       borderColor: "border-amber-200/60",
       hoverColor: "hover:border-amber-400 hover:shadow-amber-100",
