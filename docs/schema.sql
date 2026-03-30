@@ -515,12 +515,12 @@ CREATE POLICY "Users can delete their own push subscriptions" ON public.push_sub
 
 -- Trigger to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_push_subscriptions_updated_at()
-RETURNS TRIGGER AS \$\$
+RETURNS TRIGGER AS $$
 BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-\$\$ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 DROP TRIGGER IF EXISTS update_push_subscriptions_updated_at ON public.push_subscriptions;
 CREATE TRIGGER update_push_subscriptions_updated_at
