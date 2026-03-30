@@ -1,4 +1,7 @@
+"use client";
+
 import { SiteSettings } from "@/types";
+import { usePwaInstall } from "@/hooks/usePwaInstall";
 
 export interface FooterProps {
   className?: string;
@@ -11,81 +14,88 @@ export default function Footer({
   showDisclaimer = false,
   settings,
 }: FooterProps) {
+  const { isInstallable, installPwa } = usePwaInstall();
+
+  // Combine address, email, phone with dashes as shown in design
+  const contactInfoParts = [];
+  if (settings?.footer_address) contactInfoParts.push(settings.footer_address);
+  if (settings?.footer_email) contactInfoParts.push(settings.footer_email);
+  if (settings?.footer_phone) contactInfoParts.push(settings.footer_phone);
+
+  const contactInfoString = contactInfoParts.join(" - ");
+
   return (
-    <footer
-      className={`py-8 text-center text-sm text-stone-500 ${className} backdrop-blur-sm`}
-    >
-      <div className="max-w-7xl mx-auto px-4">
-        {settings && (settings.footer_address || settings.footer_phone || settings.footer_email || settings.footer_custom_text) && (
-          <div className="mb-6 pb-6 border-b border-stone-200/50">
-            {settings.footer_custom_text && (
-               <p className="italic text-stone-600 mb-3">{settings.footer_custom_text}</p>
-            )}
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-8 text-xs text-stone-600">
-               {settings.footer_address && (
-                  <span>📍 {settings.footer_address}</span>
-               )}
-               {settings.footer_phone && (
-                  <span>📞 {settings.footer_phone}</span>
-               )}
-               {settings.footer_email && (
-                  <span>✉️ {settings.footer_email}</span>
-               )}
+    <footer className={`bg-white border-t border-stone-200/50 py-10 px-4 md:px-8 mt-auto ${className}`}>
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8 md:gap-4">
+
+        {/* Left Column: Links, Contact, and Custom text */}
+        <div className="flex flex-col gap-4 text-stone-800 flex-1">
+          {/* Custom Links (Bordered list) */}
+          {Array.isArray(settings?.custom_links) && settings.custom_links.length > 0 && (
+            <div className="flex flex-wrap text-[15px] border border-sky-600/50 w-fit">
+              {settings.custom_links.map((link: any, index: number) => (
+                <a
+                  key={index}
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`px-4 py-2 hover:bg-sky-50 transition-colors ${
+                    index < settings.custom_links!.length - 1 ? "border-r border-sky-600/50" : ""
+                  }`}
+                >
+                  {link.title}
+                </a>
+              ))}
             </div>
+          )}
 
-            {Array.isArray(settings.custom_links) && settings.custom_links.length > 0 && (
-              <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mt-4 text-sm font-medium">
-                {settings.custom_links.map((link: any, index: number) => (
-                  <a
-                    key={index}
-                    href={link.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-amber-800 hover:text-amber-600 transition-colors underline underline-offset-4 decoration-amber-200 hover:decoration-amber-500"
-                  >
-                    {link.title}
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
+          {/* Contact Info */}
+          {contactInfoString && (
+            <div className="text-[15px]">
+              {contactInfoString}
+            </div>
+          )}
 
-        {showDisclaimer && (
-          <p className="mb-4 text-xs tracking-wide bg-amber-50 inline-block px-3 py-1 rounded-full text-amber-800/80 border border-amber-200/50">
-            Nội dung có thể thiếu sót. Vui lòng đóng góp để gia phả chính xác
-            hơn.
-          </p>
-        )}
-        <p className="flex items-center justify-center gap-2 opacity-80 hover:opacity-100 transition-opacity">
-          <a
-            href="https://github.com/ngoctu2008/giaphaviet"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold text-stone-600 hover:text-amber-700 transition-colors inline-flex items-center gap-1.5"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              width="16"
-              height="16"
-              stroke="currentColor"
-              strokeWidth="2"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          {/* Custom Footer Text */}
+          {settings?.footer_custom_text && (
+            <div className="text-[15px]">
+              {settings.footer_custom_text}
+            </div>
+          )}
+        </div>
+
+        {/* Right Column: Install Button and Branding */}
+        <div className="flex flex-col items-center md:items-end gap-3 w-full md:w-auto mt-4 md:mt-0">
+
+          {/* The Install Button - Designed like the image */}
+          {isInstallable && (
+            <button
+              onClick={installPwa}
+              className="group relative flex items-center bg-[#4673c6] text-white rounded-full pr-6 pl-2 py-2 hover:bg-[#3b62a8] transition-colors shadow-sm overflow-hidden min-w-[320px] justify-start"
             >
-              <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
-            </svg>
-            Gia phả Việt
-          </a>
-          phát triển bởi
-          <a
-            href="mailto:ngoctu.dnkd@gmail.com"
-            className="font-semibold text-[#8b0000] hover:text-[#b8860b] transition-colors inline-flex items-center gap-1.5"
-          >
-            Phạm Ngọc Tú
-          </a>
-        </p>
+              <div className="w-12 h-12 bg-white rounded-full flex flex-col items-center justify-center text-stone-900 border-2 border-[#81c045] shrink-0 font-medium text-xs shadow-sm group-hover:scale-105 transition-transform">
+                <span>Log</span>
+                <span>o</span>
+              </div>
+              <span className="ml-4 font-medium text-[15px]">
+                Cài đặt ứng dụng này vào điện thoại
+              </span>
+            </button>
+          )}
+
+          {/* Disclaimer (if passed, hide for clean layout but keep option) */}
+          {showDisclaimer && (
+            <p className="text-xs text-stone-500 max-w-[300px] text-center md:text-right">
+               Nội dung có thể thiếu sót. Vui lòng đóng góp để gia phả chính xác hơn.
+            </p>
+          )}
+
+          {/* Attribution text */}
+          <p className="text-[15px] text-stone-800">
+            Gia phả Việt phát triển bởi Phạm Ngọc Tú
+          </p>
+        </div>
+
       </div>
     </footer>
   );
