@@ -97,6 +97,23 @@ export default function NewsManager({
 
         if (data) {
           setNews([data, ...news]);
+
+          // Send push notification if it is published
+          if (data.is_published) {
+            try {
+              await fetch("/api/push/send", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  title: "Tin tức mới: " + data.title,
+                  body: "Nhấn vào để xem chi tiết tin tức dòng họ.",
+                  url: "/dashboard/news/" + data.id
+                })
+              });
+            } catch (pushErr) {
+              console.error("Lỗi khi gửi thông báo đẩy:", pushErr);
+            }
+          }
         }
       }
 
