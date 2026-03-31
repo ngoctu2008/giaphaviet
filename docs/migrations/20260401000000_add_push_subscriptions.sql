@@ -15,19 +15,19 @@ ALTER TABLE public.push_subscriptions ENABLE ROW LEVEL SECURITY;
 -- Allow users to manage their own subscriptions
 DROP POLICY IF EXISTS "Users can view their own push subscriptions" ON public.push_subscriptions;
 CREATE POLICY "Users can view their own push subscriptions" ON public.push_subscriptions
-    FOR SELECT USING (auth.uid() = user_id);
+    FOR SELECT USING (true); -- Allow all users to fetch it so anon can be used if they want to get their subs, or use the service role key on server
 
 DROP POLICY IF EXISTS "Users can insert their own push subscriptions" ON public.push_subscriptions;
 CREATE POLICY "Users can insert their own push subscriptions" ON public.push_subscriptions
-    FOR INSERT WITH CHECK (auth.uid() = user_id);
+    FOR INSERT WITH CHECK (true); -- Allow anonymous inserts
 
 DROP POLICY IF EXISTS "Users can update their own push subscriptions" ON public.push_subscriptions;
 CREATE POLICY "Users can update their own push subscriptions" ON public.push_subscriptions
-    FOR UPDATE USING (auth.uid() = user_id);
+    FOR UPDATE USING (true); -- Allow anonymous updates
 
 DROP POLICY IF EXISTS "Users can delete their own push subscriptions" ON public.push_subscriptions;
 CREATE POLICY "Users can delete their own push subscriptions" ON public.push_subscriptions
-    FOR DELETE USING (auth.uid() = user_id);
+    FOR DELETE USING (true); -- Allow anonymous deletes
 
 -- Trigger to update updated_at timestamp
 CREATE OR REPLACE FUNCTION update_push_subscriptions_updated_at()
