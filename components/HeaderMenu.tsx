@@ -1,17 +1,22 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { BarChart2, CalendarDays, ChevronDown, Database, GitMerge, Info, Network, UserCircle, Users } from "lucide-react";
+import { BarChart2, Bell, CalendarDays, ChevronDown, Database, Download, GitMerge, Info, Network, UserCircle, Users } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import LogoutButton from "./LogoutButton";
 import { useUser } from "./UserProvider";
+import { usePwaInstall } from "@/hooks/usePwaInstall";
+import { usePushNotifications } from "@/hooks/usePushNotifications";
 
 export default function HeaderMenu() {
   const { user, isAdmin } = useUser();
   const userEmail = user?.email;
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const { isInstallable, isInstalled, installPwa } = usePwaInstall();
+  const { isSupported, subscription, subscribeToPush, unsubscribeFromPush, isLoading: isPushLoading } = usePushNotifications();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -124,8 +129,61 @@ export default function HeaderMenu() {
                 Tin tức dòng họ
               </Link>
 
+              <div className="h-px bg-stone-100 my-1 mx-4" />
+
+              <div className="px-4 py-2">
+                <p className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-2">
+                  Ứng dụng
+                </p>
+                <div className="space-y-1">
+                  {!isInstalled ? (
+                    <button
+                      onClick={() => { installPwa(); setIsOpen(false); }}
+                      className={`w-full flex items-center justify-between gap-2 px-2 py-1.5 text-xs font-medium rounded-lg transition-colors border ${
+                         isInstallable ? 'text-amber-700 bg-amber-50 hover:bg-amber-100 border-amber-200' : 'text-stone-700 bg-stone-50 hover:bg-stone-100 border-stone-200'
+                      }`}
+                    >
+                      <span className="flex items-center gap-1.5"><Download className="size-3.5" /> Cài đặt App</span>
+                    </button>
+                  ) : (
+                    <div className="w-full flex items-center justify-between gap-2 px-2 py-1.5 text-xs font-medium text-stone-500 bg-stone-50 rounded-lg border border-stone-200 opacity-70 cursor-not-allowed">
+                      <span className="flex items-center gap-1.5"><Download className="size-3.5" /> Đã cài đặt App</span>
+                    </div>
+                  )}
+
+                  {!isPushLoading && isSupported && (
+                    <button
+                      onClick={async () => {
+                        if (subscription) {
+                          await unsubscribeFromPush();
+                        } else {
+                          const perm = await Notification.requestPermission();
+                          if (perm === "granted") await subscribeToPush();
+                        }
+                      }}
+                      className={`w-full flex items-center justify-between gap-2 px-2 py-1.5 text-xs font-medium rounded-lg transition-colors border ${
+                        subscription
+                          ? 'text-rose-700 bg-rose-50 hover:bg-rose-100 border-rose-200'
+                          : 'text-sky-700 bg-sky-50 hover:bg-sky-100 border-sky-200'
+                      }`}
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <Bell className={`size-3.5 ${subscription ? 'fill-rose-700/20' : ''}`} />
+                        {subscription ? 'Tắt thông báo' : 'Bật thông báo'}
+                      </span>
+                    </button>
+                  )}
+                  {!isPushLoading && !isSupported && (
+                     <div className="w-full flex items-center justify-between gap-2 px-2 py-1.5 text-xs font-medium text-stone-500 bg-stone-50 rounded-lg border border-stone-200 opacity-70 cursor-not-allowed">
+                     <span className="flex items-center gap-1.5"><Bell className="size-3.5" /> Trình duyệt không hỗ trợ TB</span>
+                   </div>
+                  )}
+                </div>
+              </div>
+
               {isAdmin && (
                 <>
+                  <div className="h-px bg-stone-100 my-1 mx-4" />
                   <div className="px-4 py-2 mt-1">
                     <p className="text-[10px] font-bold text-rose-500 uppercase tracking-wider">
                       Quản trị viên

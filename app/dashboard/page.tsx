@@ -66,6 +66,13 @@ export default async function DashboardLaunchpad() {
     .order("created_at", { ascending: false })
     .limit(3);
 
+  const { data: recentContributions } = await supabase
+    .from("finance")
+    .select("id, amount, description, person_id, type, date, persons(full_name)")
+    .eq("type", "income")
+    .order("date", { ascending: false })
+    .limit(5);
+
   const allEvents = computeEvents(persons ?? [], customEvents ?? []);
   const upcomingEvents = allEvents.filter(
     (e) => e.daysUntil >= 0 && e.daysUntil <= 30,
@@ -323,28 +330,41 @@ export default async function DashboardLaunchpad() {
             </div>
           )}
 
-          {/* Merit Book Highlight (Sổ công đức) */}
-          <Link href="/dashboard/finance" className="group relative block overflow-hidden rounded-[2rem] bg-linear-to-br from-[#8b0000] to-[#5a0000] text-amber-50 border border-red-950 shadow-xl hover:shadow-2xl transition-all duration-300">
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/stardust.png')] opacity-20"></div>
-            <div className="absolute -right-10 -top-10 w-64 h-64 bg-amber-500/20 rounded-full blur-[80px] pointer-events-none"></div>
-
-            <div className="relative z-10 p-8 flex flex-col sm:flex-row items-center sm:justify-between gap-6">
-              <div className="text-center sm:text-left">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/50 border border-amber-500/30 text-amber-400 text-xs font-bold uppercase tracking-wider mb-3">
-                  <HeartHandshake className="size-3.5" /> Vinh danh công đức
-                </div>
-                <h3 className="text-2xl md:text-3xl font-serif font-bold text-amber-400 mb-2 drop-shadow-sm">Sổ Vàng Dòng Họ</h3>
-                <p className="text-red-200/80 text-sm max-w-sm">Quản lý minh bạch, ghi nhận lòng thành tâm và sự đóng góp của con cháu muôn phương xây dựng tổ tiên.</p>
-              </div>
-              <div className="flex-shrink-0">
-                <div className="size-20 rounded-full bg-linear-to-br from-amber-400 to-amber-600 p-1 shadow-[0_0_30px_rgba(245,158,11,0.3)] group-hover:scale-105 transition-transform">
-                  <div className="w-full h-full rounded-full border-2 border-amber-200/50 flex items-center justify-center bg-[#8b0000]">
-                    <Database className="size-8 text-amber-400" />
-                  </div>
-                </div>
-              </div>
+          {/* Merit Book Highlight (Sổ công đức) - New Design based on image */}
+          <div className="relative overflow-hidden rounded-[4px] bg-[#8B2323] text-amber-50 shadow-xl">
+            <div className="absolute top-4 right-8 pointer-events-none opacity-20 z-0">
+              <HeartHandshake className="w-56 h-56 text-white stroke-[0.5]" />
             </div>
-          </Link>
+
+            <div className="relative z-10 p-6 sm:p-8 flex flex-col h-full">
+              <h3 className="text-[26px] font-serif font-bold text-[#FBBF24] mb-6 drop-shadow-sm">Vàng Son Công Đức</h3>
+
+              {/* List of 5 recent contributions */}
+              <div className="flex-1 flex flex-col gap-0 mb-6">
+                {recentContributions && recentContributions.length > 0 ? (
+                  recentContributions.map((contrib, idx) => (
+                    <div key={contrib.id} className={`flex flex-col sm:flex-row sm:items-center justify-between py-4 ${idx !== recentContributions.length - 1 ? 'border-b border-[#9A2D2D]' : ''}`}>
+                      <div className="flex-1 mb-1 sm:mb-0">
+                        <p className="font-bold text-[18px] text-white">
+                          {contrib.persons ? (contrib.persons as any).full_name : "Ẩn danh"}
+                        </p>
+                        <p className="text-[#E5E7EB] text-[15px] font-light mt-1 line-clamp-1">{contrib.description || "Công đức"}</p>
+                      </div>
+                      <div className="font-bold text-[#FBBF24] text-[18px] shrink-0 sm:ml-4">
+                        {new Intl.NumberFormat('vi-VN').format(contrib.amount)}đ
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="py-8 text-center text-red-200/50">Chưa có bản ghi công đức nào.</div>
+                )}
+              </div>
+
+              <Link href="/dashboard/finance" className="w-full block text-center bg-[#D97706] hover:bg-[#B45309] text-black font-bold py-[14px] rounded-[4px] transition-colors shadow-md mt-auto text-[17px]">
+                Chi tiết Sổ Công Đức
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
 
