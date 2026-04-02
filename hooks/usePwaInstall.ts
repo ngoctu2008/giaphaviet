@@ -34,23 +34,28 @@ export function usePwaInstall() {
   }, []);
 
   const installPwa = async () => {
+    // If no deferred prompt, maybe they are on iOS or the app is already installed
     if (!deferredPrompt) {
-      alert("Thiết bị hoặc trình duyệt của bạn không hỗ trợ cài đặt ứng dụng, hoặc ứng dụng đã được cài đặt. Thử dùng Chrome/Safari trên di động và chọn 'Thêm vào màn hình chính' (Add to Home Screen).");
+      alert("Thiết bị hoặc trình duyệt của bạn chưa sẵn sàng cài đặt ứng dụng, hoặc ứng dụng đã được cài đặt. Đối với iPhone/iPad (Safari), vui lòng chọn nút 'Chia sẻ' ở dưới cùng màn hình và chọn 'Thêm vào màn hình chính' (Add to Home Screen).");
       return;
     }
 
     // Show the install prompt
-    deferredPrompt.prompt();
+    try {
+      deferredPrompt.prompt();
 
-    // Wait for the user to respond to the prompt
-    const { outcome } = await deferredPrompt.userChoice;
+      // Wait for the user to respond to the prompt
+      const { outcome } = await deferredPrompt.userChoice;
 
-    // We've used the prompt, and can't use it again, throw it away
-    setDeferredPrompt(null);
-    setIsInstallable(false);
+      // We've used the prompt, and can't use it again, throw it away
+      setDeferredPrompt(null);
+      setIsInstallable(false);
 
-    if (outcome === 'accepted') {
-       setIsInstalled(true);
+      if (outcome === 'accepted') {
+         setIsInstalled(true);
+      }
+    } catch (error) {
+      console.error("Error prompting PWA install:", error);
     }
   };
 
