@@ -67,8 +67,8 @@ export default async function DashboardLaunchpad() {
     .limit(3);
 
   const { data: recentContributions } = await supabase
-    .from("finance")
-    .select("id, amount, description, person_id, type, date, persons(full_name)")
+    .from("transactions")
+    .select("id, amount, description, person_id, type, date, category, contributor_name, persons(full_name)")
     .eq("type", "income")
     .order("date", { ascending: false })
     .limit(5);
@@ -346,7 +346,7 @@ export default async function DashboardLaunchpad() {
                     <div key={contrib.id} className={`flex flex-col sm:flex-row sm:items-center justify-between py-4 ${idx !== recentContributions.length - 1 ? 'border-b border-[#9A2D2D]' : ''}`}>
                       <div className="flex-1 mb-1 sm:mb-0">
                         <p className="font-bold text-[18px] text-white">
-                          {contrib.persons ? (contrib.persons as any).full_name : "Ẩn danh"}
+                          {contrib.persons ? (contrib.persons as any).full_name : (contrib.contributor_name || "Ẩn danh")}
                         </p>
                         <p className="text-[#E5E7EB] text-[15px] font-light mt-1 line-clamp-1">{contrib.description || "Công đức"}</p>
                       </div>
