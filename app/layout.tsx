@@ -4,6 +4,7 @@ import config from "./config";
 import "./globals.css";
 import { PWAInstallPrompt } from "./components/PWAInstallPrompt";
 import { PushNotificationPrompt } from "./components/PushNotificationPrompt";
+import { PWAInstallCapture } from "./components/PWAInstallCapture";
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
@@ -31,6 +32,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${playfair.variable} font-sans antialiased relative`}
       >
+        <PWAInstallCapture />
         {children}
         <PWAInstallPrompt />
         <PushNotificationPrompt />
