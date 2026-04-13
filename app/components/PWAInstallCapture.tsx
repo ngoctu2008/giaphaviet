@@ -3,6 +3,11 @@ import { useEffect } from "react";
 
 export function PWAInstallCapture() {
   useEffect(() => {
+    // If the window already caught it before React hydrated (from inline script)
+    if (typeof window !== 'undefined' && window.deferredPWAInstallPrompt) {
+        window.dispatchEvent(new Event("pwa-prompt-ready"));
+    }
+
     const handler = (e: any) => {
       e.preventDefault();
       window.deferredPWAInstallPrompt = e;
